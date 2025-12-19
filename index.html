@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkCore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" 
+          integrity="sha512-..." 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: black url('BlackBG_2k.png') top right no-repeat;
+            background-size: contain;
+            color: #d8bfd8;
+            font-family: 'Orbitron', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #9f6aff;
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(159, 106, 255, 0.4);
+            margin-bottom: 2px;
+        }
+
+        .tagline {
+            font-size: 1.4em;
+            margin: 10px 0 8px;
+            text-shadow: 0 0 10px rgba(159, 106, 255, 0.6);
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        .links {
+            margin: 1px 0;
+        }
+
+        .link {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.4);
+            color: #d8bfd8;
+            border: 2px solid #9f6aff;
+            padding: 14px 8px;
+            margin: 3px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            width: 110px;
+        }
+
+        .link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(159, 106, 255, 0.2), transparent);
+            transition: left 0.9s;
+        }
+
+        .link:hover {
+            background: rgba(159, 106, 255, 0.15);
+            color: mediumpurple;
+            box-shadow: 0 0 20px rgba(159, 106, 255, 0.6);
+            transform: translateY(-6px);
+        }
+
+        .link:hover::before {
+            left: 100%;
+        }
+
+        .search-container {
+            margin-top: 4px;
+        }
+
+        .search {
+            width: 80%;
+            max-width: 400px;
+            padding: 14px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #9f6aff;
+            color: #d8bfd8;
+            border-radius: 14px;
+            font-size: 1.1em;
+            outline: none;
+            transition: all 0.4s ease;
+        }
+
+        .search::placeholder {
+            color: rgba(159, 106, 255, 0.6);
+            transition: opacity 0.3s;
+        }
+
+        .search:focus {
+            width: 85%;
+            border-color: #c8a2ff;
+            box-shadow: 0 0 20px rgba(159, 106, 255, 0.5);
+            background: rgba(20, 0, 40, 0.6);
+            transition: all 0.4s ease;
+        }
+
+        .search:focus::placeholder {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="avatar" src="avatar1.jpg" alt="Аватар">
+        <p class="tagline">Мой план — это баг. Но он работает.</p>
+        <div class="links">
+            <a class="link" href="https://t.me/DarkimuSSS">
+                <i class="fa-brands fa-telegram"></i> Telegram
+            </a>
+            <a class="link" href="https://discord.com/invite/liledarkimusss">
+                <i class="fa-brands fa-discord"></i> Discord
+            </a>
+            <a class="link" href="https://github.com/DarkimuSSS">
+                <i class="fa-brands fa-github"></i> GitHub
+            </a>
+        </div>
+        <div class="search-container">
+            <input class="search" type="text" placeholder="Поиск..." id="searchInput">
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && this.value.trim() !== '') {
+                const query = encodeURIComponent(this.value.trim());
+                window.location.href = `https://yandex.ru/search/?text=${query}`;
+            }
+        });
+    </script>
+</body>
+</html>
