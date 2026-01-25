@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkCore - Скачать</title>
+    <style>
+        /* Кастомный курсор */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #9f6aff, #6a11cb);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.9;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, opacity 0.2s;
+            box-shadow: 
+                0 0 15px rgba(159, 106, 255, 0.8),
+                0 0 30px rgba(159, 106, 255, 0.4),
+                inset 0 0 10px rgba(255, 255, 255, 0.2);
+            mix-blend-mode: screen;
+        }
+
+        .custom-cursor.hover {
+            width: 35px;
+            height: 35px;
+            background: radial-gradient(circle, #ff6b6b, #ff4757);
+            opacity: 0.8;
+            box-shadow: 
+                0 0 25px rgba(255, 107, 107, 0.9),
+                0 0 50px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Трейл-частицы */
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(45deg, #9f6aff, #00eeff);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0);
+            box-shadow: 0 0 8px rgba(159, 106, 255, 0.7);
+        }
+
+        /* Основные стили страницы */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.download-page {
+            min-height: 100vh;
+            padding: 80px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+            font-family: 'Orbitron', Arial, sans-serif;
+            color: #d8bfd8;
+            background: 
+                linear-gradient(to bottom, 
+                    rgba(0, 0, 0, 0.9) 0%,
+                    rgba(20, 0, 40, 0.8) 50%,
+                    rgba(0, 0, 0, 0.95) 100%);
+            cursor: none !important;
+        }
+
+        /* Затемнение фона для лучшей читаемости контента */
+        body.download-page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.6) 40%,
+                rgba(0, 0, 0, 0.8) 100%
+            );
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Заголовок */
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #bb86fc;
+            text-shadow: 0 0 20px rgba(187, 134, 252, 0.7);
+            animation: glow 2s ease-in-out infinite alternate;
+            position: relative;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(159, 106, 255, 0.3);
+            backdrop-filter: blur(5px);
+            margin-top: 20px;
+            z-index: 2;
+        }
+
+        @keyframes glow {
+            from { 
+                text-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc; 
+                box-shadow: 0 0 20px rgba(159, 106, 255, 0.3);
+            }
+            to { 
+                text-shadow: 0 0 15px #bb86fc, 0 0 30px #bb86fc, 0 0 40px #9f6aff; 
+                box-shadow: 0 0 30px rgba(159, 106, 255, 0.5);
+            }
+        }
+
+        /* Подзаголовок */
+        .subtitle {
+            font-family: 'Exo', sans-serif;
+            text-align: center;
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            color: #d8bfd8;
+            position: relative;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            max-width: 600px;
+            line-height: 1.5;
+            z-index: 2;
+        }
+
+        /* Кнопка скачивания */
+        .download-main-btn {
+            display: inline-block;
+            background: rgba(159, 106, 255, 0.25);
+            color: #ffffff;
+            border: 2px solid #9f6aff;
+            padding: 16px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 60px;
+            box-shadow: 0 0 25px rgba(159, 106, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+            cursor: none;
+        }
+
+        .download-main-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.7s;
+            z-index: -1;
+        }
+
+        .download-main-btn:hover {
+            background: rgba(159, 106, 255, 0.35);
+            box-shadow: 0 0 40px rgba(159, 106, 255, 0.6);
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .download-main-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-main-btn i {
+            margin-right: 12px;
+        }
+
+        /* Бургер-меню */
+        .burger-container { 
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            z-index: 1000;
+        }
+
+        .burger { 
+            cursor: none; 
+            display: block; 
+            padding: 10px;
+            z-index: 1001;
+        }
+
+        .burger div { 
+            width: 30px; 
+            height: 3px; 
+            background: #9f6aff; 
+            margin: 6px 0; 
+            transition: all 0.3s ease; 
+        }
+
+        #checkbox { 
+            display: none; 
+        }
+
+        .menu { 
+            display: none; 
+            position: absolute; 
+            top: 60px; 
+            right: 0; 
+            background: rgba(0, 0, 0, 0.95); 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 2px solid rgba(159, 106, 255, 0.3);
+            box-shadow: 0 0 25px rgba(159, 106, 255, 0.4);
+            min-width: 180px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .menu a { 
+            display: block; 
+            color: #bb86fc; 
+            margin: 12px 0; 
+            text-decoration: none; 
+            font-family: 'Exo', sans-serif;
+            font-size: 1.1em;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(159, 106, 255, 0.15);
+            color: #ffffff;
+            padding-left: 20px;
+        }
+
+        .menu a:not(:last-child) {
+            margin-bottom: 15px;
+        }
+
+        #checkbox:checked ~ .menu { 
+            display: block; 
+            animation: slideDown 0.3s ease;
+        }
+
+        #checkbox:checked ~ .burger div:nth-child(1) { 
+            transform: rotate(45deg) translate(8px, 8px); 
+        }
+
+        #checkbox:checked ~ .burger div:nth-child(2) { 
+            opacity: 0; 
+        }
+
+        #checkbox:checked ~ .burger div:nth-child(3) { 
+            transform: rotate(-45deg) translate(8px, -8px); 
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Контейнер с превью */
+        .preview-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Стили для блоков превью */
+        .preview-me,
+        .preview-workbench,
+        .preview-thaum,
+        .preview-upload,
+        .preview-test,
+        .preview-test1,
+        .preview-test2,
+        .preview-test3 {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 25px;
+            border: 2px solid rgba(159, 106, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(159, 106, 255, 0.15);
+            transition: all 0.4s ease;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-me::before,
+        .preview-workbench::before,
+        .preview-thaum::before,
+        .preview-upload::before,
+        .preview-test::before,
+        .preview-test1::before,
+        .preview-test2::before,
+        .preview-test3::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(159, 106, 255, 0.05), transparent);
+            z-index: -1;
+        }
+
+        .preview-me img,
+        .preview-workbench img,
+        .preview-thaum img,
+        .preview-upload img,
+        .preview-test img,
+        .preview-test1 img,
+        .preview-test2 img,
+        .preview-test3 img {
+            flex: 1;
+            min-width: 400px;
+            max-width: 500px;
+            border-radius: 18px;
+            border: 3px solid #9f6aff;
+            box-shadow: 0 0 40px rgba(159, 106, 255, 0.4);
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .preview-me p,
+        .preview-workbench p,
+        .preview-thaum p,
+        .preview-upload p,
+        .preview-test p,
+        .preview-test1 p,
+        .preview-test2 p,
+        .preview-test3 p {
+            flex: 1;
+            font-family: 'Exo', sans-serif;
+            font-size: 1.3em;
+            line-height: 1.7;
+            color: #d8bfd8;
+            padding: 20px;
+            background: rgba(159, 106, 255, 0.08);
+            border-radius: 15px;
+            border-left: 5px solid #9f6aff;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .preview-me,
+        .preview-thaum,
+        .preview-test2 {
+            flex-direction: row;
+        }
+
+        .preview-workbench,
+        .preview-upload,
+        .preview-test,
+        .preview-test1,
+        .preview-test3 {
+            flex-direction: row-reverse;
+        }
+
+        .preview-me:hover,
+        .preview-workbench:hover,
+        .preview-thaum:hover,
+        .preview-upload:hover,
+        .preview-test:hover,
+        .preview-test1:hover,
+        .preview-test2:hover,
+        .preview-test3:hover {
+            border-color: rgba(159, 106, 255, 0.6);
+            box-shadow: 0 15px 50px rgba(159, 106, 255, 0.25);
+            transform: translateY(-5px);
+        }
+
+        .preview-me:hover img,
+        .preview-workbench:hover img,
+        .preview-thaum:hover img,
+        .preview-upload:hover img,
+        .preview-test:hover img,
+        .preview-test1:hover img,
+        .preview-test2:hover img,
+        .preview-test3:hover img {
+            box-shadow: 0 0 60px rgba(159, 106, 255, 0.6);
+            transform: scale(1.02);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1100px) {
+            .preview-me,
+            .preview-workbench,
+            .preview-thaum,
+            .preview-upload,
+            .preview-test,
+            .preview-test1,
+            .preview-test2,
+            .preview-test3 {
+                flex-direction: column;
+                gap: 40px;
+                padding: 35px;
+                margin: 60px 0;
+            }
+            
+            .preview-me img,
+            .preview-workbench img,
+            .preview-thaum img,
+            .preview-upload img,
+            .preview-test img,
+            .preview-test1 img,
+            .preview-test2 img,
+            .preview-test3 img {
+                min-width: 100%;
+                max-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .burger-container {
+                top: 15px;
+                right: 15px;
+            }
+            
+            .menu {
+                top: 55px;
+                right: 10px;
+                min-width: 160px;
+                max-width: calc(100vw - 30px);
+            }
+            
+            h1 {
+                font-size: 2.2em;
+                padding: 15px 25px;
+            }
+            
+            .subtitle {
+                font-size: 1.1em;
+                margin-bottom: 30px;
+                padding: 10px 20px;
+            }
+            
+            .download-main-btn {
+                padding: 14px 30px;
+                font-size: 1.1em;
+                margin-bottom: 50px;
+            }
+            
+            .preview-me,
+            .preview-workbench,
+            .preview-thaum,
+            .preview-upload,
+            .preview-test,
+            .preview-test1,
+            .preview-test2,
+            .preview-test3 {
+                padding: 25px;
+                margin: 40px 0;
+                gap: 30px;
+            }
+            
+            .preview-me p,
+            .preview-workbench p,
+            .preview-thaum p,
+            .preview-upload p,
+            .preview-test p,
+            .preview-test1 p,
+            .preview-test2 p,
+            .preview-test3 p {
+                font-size: 1.1em;
+                padding: 15px;
+            }
+            
+            /* Скрываем кастомный курсор на мобильных */
+            .custom-cursor,
+            .cursor-trail {
+                display: none !important;
+            }
+            
+            body, .download-main-btn, .burger, .menu a {
+                cursor: auto !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.9em;
+                padding: 12px 20px;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+                padding: 8px 15px;
+            }
+            
+            .download-main-btn {
+                width: 90%;
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            
+            .preview-me p,
+            .preview-workbench p,
+            .preview-thaum p,
+            .preview-upload p,
+            .preview-test p,
+            .preview-test1 p,
+            .preview-test2 p,
+            .preview-test3 p {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+
+<body class="download-page">
+    <div class="custom-cursor" id="customCursor"></div>
+    <div class="cursor-trail" id="cursorTrail"></div>
+    
+    <h1>DarkCoreUtils</h1>
+    <p class="subtitle">Мощный инструмент для работы.</p>
+    
+        <i class="fas fa-download"></i> Скачать DarkCore.exe
+    </a>
+
+    <div class="burger-container">
+        <label class="burger" for="checkbox">
+            <div></div>
+            <div></div>
+            <div></div>
+        </label>
+        <input type="checkbox" id="checkbox">
+        <nav class="menu">
+            <a href="/">Главная</a>
+            <a href="/download.html">Скачать DarkCore</a>
+            <a href="/massgen.html">Массовая Генерация</a>
+            <a href="/main.html">Тест DarkCore</a>
+        </nav>
+    </div>
+
+    <div class="preview-container">
+        <div class="preview-me">
+            <img src="previews/null.png" alt="null">
+            <p></p>
+        </div>
+
+        <div class="preview-workbench">
+            <p></p>
+            <img src="previews/null.png" alt="null">
+        </div>
+
+        <div class="preview-thaum">
+            <img src="previews/null.png" alt="null">
+            <p></p>
+        </div>
+
+        <div class="preview-test">
+            <p>.</p>
+            <img src="previews/null.png" alt="null"> 
+        </div>
+
+        <div class="preview-test1">
+            <p></p>
+            <img src="previews/null.png" alt="null">
+        </div>
+
+        <div class="preview-test2">
+            <img src="previews/null.png" alt="null">
+            <p></p>
+        </div>
+
+        <div class="preview-test3">
+            <p></p>
+            <img src="previews/null.png" alt="null"> 
+        </div>
+    </div>
+
+    <script>
+        {
+        if (window.innerWidth > 768) {
+            const cursor = document.getElementById('customCursor');
+            const trail = document.getElementById('cursorTrail');
+            
+            let mouseX = 0;
+            let mouseY = 0;
+            let cursorX = 0;
+            let cursorY = 0;
+            let trailX = 0;
+            let trailY = 0;
+            
+            const cursorSpeed = 0.2;
+            const trailSpeed = 0.08;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                createTrailParticle(e.clientX, e.clientY);
+            });
+            
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * cursorSpeed;
+                cursorY += (mouseY - cursorY) * cursorSpeed;
+                
+                trailX += (mouseX - trailX) * trailSpeed;
+                trailY += (mouseY - trailY) * trailSpeed;
+                
+                cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
+                trail.style.transform = `translate(${trailX}px, ${trailY}px)`;
+                
+                trail.style.opacity = '0.7';
+                trail.style.transform = `translate(${trailX}px, ${trailY}px) scale(1)`;
+                
+                requestAnimationFrame(animateCursor);
+            }
+            
+            function createTrailParticle(x, y) {
+                    const particle = document.createElement('div');
+                    particle.style.cssText = `
+                        position: fixed;
+                        width: 4px;
+                        height: 4px;
+                        background: linear-gradient(45deg, #9f6aff, #00eeff);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 9997;
+                        left: ${x}px;
+                        top: ${y}px;
+                        transform: translate(-50%, -50%);
+                        opacity: 0.7;
+                        box-shadow: 0 0 6px rgba(159, 106, 255, 0.8);
+                    `;
+                    
+                    document.body.appendChild(particle);
+                    
+                    let opacity = 0.7;
+                    const fadeInterval = setInterval(() => {
+                        opacity -= 0.05;
+                        particle.style.opacity = opacity;
+                        particle.style.transform = `translate(-50%, -50%) scale(${opacity})`;
+                        
+                        if (opacity <= 0) {
+                            clearInterval(fadeInterval);
+                            if (particle.parentNode) {
+                                particle.parentNode.removeChild(particle);
+                            }
+                        }
+                    }, 25);
+                }
+            }
+            
+            const hoverElements = document.querySelectorAll('a, button, .download-main-btn, .burger, .menu a');
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hover');
+                });
+                
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hover');
+                });
+            });
+            
+            document.addEventListener('mouseleave', () => {
+                cursor.style.opacity = '0';
+                trail.style.opacity = '0';
+            });
+            
+            document.addEventListener('mouseenter', () => {
+                cursor.style.opacity = '0.9';
+                trail.style.opacity = '0.7';
+            });
+            
+            animateCursor();
+        }
+    </script>
+</body>
+</html>

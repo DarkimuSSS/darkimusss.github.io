@@ -1,0 +1,624 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background: black url('/git/img/mainbg.png') top right no-repeat;
+    background-size: contain;
+    background-attachment: fixed;
+    color: #d8bfd8;
+    font-family: 'Orbitron', Arial, sans-serif;
+    min-height: 100vh;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Убираем скроллбар */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+}
+
+/* Скрываем скроллбар для Webkit браузеров */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.burger-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.burger {
+    cursor: pointer;
+    display: block;
+    padding: 10px;
+    z-index: 1001;
+}
+
+.burger div {
+    width: 30px;
+    height: 3px;
+    background: #9f6aff;
+    margin: 6px 0;
+    transition: all 0.3s ease;
+}
+
+.menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 2px;
+    border-radius: 12px;
+    border: 2px solid rgba(159, 106, 255, 0.3);
+    box-shadow: 0 0 25px rgba(159, 106, 255, 0.4);
+    min-width: 180px;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.menu a {
+    display: block;
+    color: #bb86fc;
+    margin: 12px 0;
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1em;
+    padding: 8px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.menu a:hover {
+    background: rgba(159, 106, 255, 0.15);
+    color: #ffffff;
+    padding-left: 20px;
+}
+
+.menu a:not(:last-child) {
+    margin-bottom: 15px;
+}
+
+#checkbox {
+    display: none;
+}
+
+#checkbox:checked~.menu {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+#checkbox:checked~.burger div:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+#checkbox:checked~.burger div:nth-child(2) {
+    opacity: 0;
+}
+
+#checkbox:checked~.burger div:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -8px);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.link,
+.download-btn {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.4);
+    color: #d8bfd8;
+    border: 2px solid #9f6aff;
+    padding: 14px 20px;
+    margin: 4px;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+}
+
+.link i,
+.download-btn i {
+    margin-right: 8px;
+}
+
+.link::before,
+.download-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(159, 106, 255, 0.2), transparent);
+    transition: left 0.9s;
+}
+
+.link:hover,
+.download-btn:hover {
+    background: rgba(159, 106, 255, 0.15);
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(159, 106, 255, 0.6);
+    transform: translateY(-6px);
+}
+
+.link:hover::before,
+.download-btn:hover::before {
+    left: 100%;
+}
+
+body.main-page .container {
+    text-align: center;
+    max-width: 600px;
+    padding: 20px;
+}
+
+body.main-page .avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #9f6aff;
+    box-shadow: 0 0 15px rgba(159, 106, 255, 0.4);
+    margin-bottom: 2px;
+}
+
+body.main-page .tagline {
+    font-size: 1.4em;
+    margin: 10px 0 8px;
+    text-shadow: 0 0 10px rgba(159, 106, 255, 0.6);
+}
+
+body.main-page .search {
+    width: 80%;
+    max-width: 400px;
+    padding: 14px 25px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #9f6aff;
+    color: #d8bfd8;
+    border-radius: 14px;
+    font-size: 1.1em;
+    outline: none;
+    transition: all 0.4s ease;
+    font-family: 'Orbitron', sans-serif;
+    box-shadow: inset 0 0 10px rgba(159, 106, 255, 0.1);
+}
+
+body.main-page .search:focus {
+    width: 85%;
+    border-color: #c8a2ff;
+    box-shadow: 0 0 20px rgba(159, 106, 255, 0.5),
+        inset 0 0 15px rgba(159, 106, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+body.main-page .search::placeholder {
+    color: rgba(216, 191, 216, 0.6);
+    font-family: 'Orbitron', sans-serif;
+}
+
+body.main-page .search:hover {
+    border-color: #b08cff;
+    box-shadow: 0 0 15px rgba(159, 106, 255, 0.3);
+}
+
+body.download-page {
+    align-items: flex-start;
+    padding: 80px 20px 40px;
+    justify-content: flex-start;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    background: black url('/git/img/mainbg.png') top right no-repeat;
+    background-size: contain;
+    background-attachment: fixed;
+    color: #d8bfd8;
+    font-family: 'Orbitron', Arial, sans-serif;
+    overflow: auto;
+    position: relative;
+    margin: 0;
+    display: flex;
+}
+
+.preview-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.preview-me {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 25px;
+    border: 2px solid rgba(159, 106, 255, 0.3);
+    box-shadow: 0 10px 40px rgba(159, 106, 255, 0.15);
+    transition: all 0.4s ease;
+    width: 100%;
+}
+
+
+.preview-me:nth-child(odd) {
+    flex-direction: row-reverse;
+}
+
+.preview-me:nth-child(even) {
+    flex-direction: row;
+}
+
+.preview-me img {
+    flex: 3;
+    min-width: 400px;
+    max-width: 500px;
+    border-radius: 18px;
+    border: 3px solid #9f6aff;
+    box-shadow: 0 0 40px rgba(159, 106, 255, 0.4);
+    transition: all 0.4s ease;
+}
+
+.preview-me p {
+    flex: 1;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3em;
+    line-height: 1.7;
+    color: #d8bfd8;
+    padding: 20px;
+    background: rgba(159, 106, 255, 0.08);
+    border-radius: 15px;
+    border-left: 5px solid #9f6aff;
+    margin: 0;
+}
+
+.preview-me:hover {
+    border-color: rgba(159, 106, 255, 0.6);
+    box-shadow: 0 15px 50px rgba(159, 106, 255, 0.25);
+    transform: translateY(-5px);
+}
+
+.preview-me:hover img {
+    box-shadow: 0 0 60px rgba(159, 106, 255, 0.6);
+    transform: scale(1.02);
+}
+
+body.download-page h1 {
+    text-align: center;
+    font-size: 2.8em;
+    margin-bottom: 10px;
+    color: #bb86fc;
+    text-shadow: 0 0 20px rgba(187, 134, 252, 0.7);
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
+    }
+
+    to {
+        text-shadow: 0 0 15px #bb86fc, 0 0 30px #bb86fc, 0 0 40px #9f6aff;
+    }
+}
+
+body.download-page .subtitle {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    color: #d8bfd8;
+}
+
+.download-main-btn {
+    display: inline-block;
+    background: rgba(159, 106, 255, 0.25);
+    color: #ffffff;
+    border: 2px solid #9f6aff;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 50px;
+    box-shadow: 0 0 20px rgba(159, 106, 255, 0.2);
+}
+
+.download-main-btn:hover {
+    background: rgba(159, 106, 255, 0.35);
+    box-shadow: 0 0 30px rgba(159, 106, 255, 0.4);
+    transform: translateY(-3px);
+}
+
+.download-main-btn i {
+    margin-right: 10px;
+}
+
+
+@media (max-width: 1100px) {
+    .preview-me {
+        flex-direction: column;
+        gap: 40px;
+        padding: 35px;
+        margin: 60px 0;
+    }
+
+    .preview-me img {
+        min-width: 100%;
+        max-width: 100%;
+    }
+
+    .preview-me:nth-child(odd),
+    .preview-me:nth-child(even) {
+        flex-direction: column;
+    }
+
+    body.download-page h1 {
+        font-size: 2.4em;
+    }
+}
+
+@media (max-width: 768px) {
+    .burger-container {
+        top: 15px;
+        right: 15px;
+    }
+
+    .menu {
+        top: 55px;
+        right: 10px;
+        min-width: 160px;
+        max-width: calc(100vw - 30px);
+    }
+
+    .link,
+    .download-btn {
+        padding: 12px 15px;
+        font-size: 0.9em;
+    }
+
+    body.main-page .container {
+        padding: 10px;
+    }
+
+    body.main-page .avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    body.main-page .search {
+        width: 90%;
+        padding: 12px 20px;
+    }
+
+    body.main-page .search:focus {
+        width: 92%;
+    }
+
+    body.download-page {
+        padding: 70px 15px 30px;
+        background: black url('/git/img/mainbg.png') center center no-repeat !important;
+        background-size: cover !important;
+        background-attachment: fixed !important;
+    }
+
+    .preview-me {
+        padding: 25px;
+        margin: 40px 0;
+        gap: 30px;
+    }
+
+    .preview-me p {
+        font-size: 1.1em;
+        padding: 15px;
+    }
+
+    body.download-page h1 {
+        font-size: 2em;
+    }
+
+    body.download-page .subtitle {
+        font-size: 1.1em;
+        margin-bottom: 25px;
+    }
+
+    .download-main-btn {
+        padding: 10px 25px;
+        font-size: 1em;
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    body.download-page h1 {
+        font-size: 1.8em;
+    }
+
+    .preview-me p {
+        font-size: 1em;
+    }
+
+    .download-main-btn {
+        width: 90%;
+        padding: 8px 20px;
+        font-size: 0.9em;
+    }
+}
+
+.footer {
+    text-align: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #2a2a3a;
+    color: rgba(156, 100, 250, 0.35);
+    font-size: 14px;
+}
+
+body.main-page .link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(159, 106, 255, 0.4);
+}
+
+body.download-page .download-btn {
+    min-width: 180px;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+body.download-page .download-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(159, 106, 255, 0.6);
+}
+
+body.download-page .floating-cursors {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+body.download-page .cursor {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+body.download-page .c1 {
+    background: conic-gradient(from 0deg, #ff0055, #00ffaa, #0055ff, #ff0055);
+    animation: move1 5s infinite ease-in-out;
+}
+
+body.download-page .c2 {
+    background: conic-gradient(from 120deg, #00ffaa, #0055ff, #ff0055, #00ffaa);
+    animation: move2 7s infinite ease-in-out;
+}
+
+body.download-page .c3 {
+    background: conic-gradient(from 240deg, #0055ff, #ff0055, #00ffaa, #0055ff);
+    animation: move3 6s infinite ease-in-out;
+}
+
+@keyframes move1 {
+    0% {
+        top: 10%;
+        left: 10%;
+        transform: scale(1);
+    }
+
+    33% {
+        top: 80%;
+        left: 20%;
+        transform: scale(1.5);
+    }
+
+    66% {
+        top: 30%;
+        left: 90%;
+        transform: scale(0.8);
+    }
+
+    100% {
+        top: 10%;
+        left: 10%;
+        transform: scale(1);
+    }
+}
+
+@keyframes move2 {
+    0% {
+        top: 90%;
+        left: 80%;
+        transform: scale(1.2);
+    }
+
+    33% {
+        top: 20%;
+        left: 90%;
+        transform: scale(0.7);
+    }
+
+    66% {
+        top: 70%;
+        left: 10%;
+        transform: scale(1.3);
+    }
+
+    100% {
+        top: 90%;
+        left: 80%;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes move3 {
+    0% {
+        top: 50%;
+        left: 50%;
+        transform: scale(1);
+    }
+
+    33% {
+        top: 10%;
+        left: 70%;
+        transform: scale(1.4);
+    }
+
+    66% {
+        top: 90%;
+        left: 30%;
+        transform: scale(0.6);
+    }
+
+    100% {
+        top: 50%;
+        left: 50%;
+        transform: scale(1);
+    }
+}
+
+
+
+@keyframes textGlow {
+    from {
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+    }
+
+    to {
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+    }
+}

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/git/img/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поддержка | DarkCore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            background: black url('/git/img/mainbg.png') top right no-repeat;
+            background-size: contain;
+            background-attachment: fixed;
+            color: #d8bfd8;
+            font-family: 'Orbitron', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+            width: 0;
+        }
+
+        .burger-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .burger {
+            cursor: pointer;
+            display: block;
+            padding: 10px;
+            z-index: 1001;
+        }
+
+        .burger div {
+            width: 30px;
+            height: 3px;
+            background: #9f6aff;
+            margin: 6px 0;
+            transition: all 0.3s ease;
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 2px;
+            border-radius: 12px;
+            border: 2px solid rgba(159, 106, 255, 0.3);
+            box-shadow: 0 0 25px rgba(159, 106, 255, 0.4);
+            min-width: 180px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .menu a {
+            display: block;
+            color: #bb86fc;
+            margin: 12px 0;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1em;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(159, 106, 255, 0.15);
+            color: #ffffff;
+            padding-left: 20px;
+        }
+
+        .menu a:not(:last-child) {
+            margin-bottom: 15px;
+        }
+
+        #checkbox {
+            display: none;
+        }
+
+        #checkbox:checked~.menu {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        #checkbox:checked~.burger div:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        #checkbox:checked~.burger div:nth-child(2) {
+            opacity: 0;
+        }
+
+        #checkbox:checked~.burger div:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .support-container {
+            width: 100%;
+            padding: 100px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Заголовок */
+        .support-header {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .support-header h1 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            color: #bb86fc;
+            text-shadow: 0 0 20px rgba(187, 134, 252, 0.7);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
+            }
+
+            to {
+                text-shadow: 0 0 15px #bb86fc, 0 0 30px #bb86fc, 0 0 40px #9f6aff;
+            }
+        }
+
+        .support-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .search-box {
+            max-width: 700px;
+            width: 100%;
+            margin: 30px auto 0;
+            display: flex;
+        }
+
+        .search-box input {
+            flex-grow: 1;
+            padding: 16px 25px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #9f6aff;
+            color: #d8bfd8;
+            border-radius: 14px 0 0 14px;
+            font-size: 1em;
+            outline: none;
+            transition: all 0.4s ease;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: inset 0 0 10px rgba(159, 106, 255, 0.1);
+        }
+
+        .search-box input:focus {
+            border-color: #c8a2ff;
+            box-shadow: 0 0 20px rgba(159, 106, 255, 0.5),
+                inset 0 0 15px rgba(159, 106, 255, 0.2);
+        }
+
+        .search-box button {
+            padding: 16px 30px;
+            background: rgba(159, 106, 255, 0.25);
+            color: #ffffff;
+            border: 2px solid #9f6aff;
+            border-left: none;
+            border-radius: 0 14px 14px 0;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-box button:hover {
+            background: rgba(159, 106, 255, 0.35);
+            box-shadow: 0 0 30px rgba(159, 106, 255, 0.4);
+        }
+
+        /* Карточки помощи */
+        .help-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 60px;
+        }
+
+        .support-card {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 30px;
+            border-radius: 18px;
+            border: 2px solid rgba(159, 106, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(159, 106, 255, 0.15);
+            text-align: center;
+            transition: all 0.4s ease;
+            height: 100%;
+        }
+
+        .support-card:hover {
+            border-color: rgba(159, 106, 255, 0.6);
+            box-shadow: 0 15px 50px rgba(159, 106, 255, 0.25);
+            transform: translateY(-8px);
+        }
+
+        .support-card i {
+            font-size: 2.8rem;
+            color: #9f6aff;
+            margin-bottom: 25px;
+            text-shadow: 0 0 15px rgba(159, 106, 255, 0.5);
+        }
+
+        .support-card h3 {
+            margin-bottom: 20px;
+            color: #bb86fc;
+            font-size: 1.4em;
+        }
+
+        .support-card p {
+            color: #d8bfd8;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .support-link {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.4);
+            color: #d8bfd8;
+            border: 2px solid #9f6aff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+        }
+
+        .support-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(159, 106, 255, 0.2), transparent);
+            transition: left 0.9s;
+        }
+
+        .support-link:hover {
+            background: rgba(159, 106, 255, 0.15);
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(159, 106, 255, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .support-link:hover::before {
+            left: 100%;
+        }
+
+        .support-link i {
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        .faq-section {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 60px;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 40px;
+            color: #bb86fc;
+            text-shadow: 0 0 15px rgba(187, 134, 252, 0.5);
+        }
+
+        .faq-container {
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 18px;
+            border: 2px solid rgba(159, 106, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(159, 106, 255, 0.15);
+            overflow: hidden;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(159, 106, 255, 0.2);
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            background: rgba(159, 106, 255, 0.05);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #bb86fc;
+        }
+
+        .faq-answer {
+            padding-top: 15px;
+            color: #d8bfd8;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .faq-question i {
+            color: #9f6aff;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contact-block {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 18px;
+            border: 2px solid rgba(159, 106, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(159, 106, 255, 0.15);
+            margin-bottom: 40px;
+        }
+
+        .contact-block h3 {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #bb86fc;
+        }
+
+        .contact-block p {
+            margin-bottom: 15px;
+            color: #d8bfd8;
+            opacity: 0.9;
+        }
+
+        .contact-block a {
+            color: #9f6aff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-block a:hover {
+            color: #c8a2ff;
+            text-shadow: 0 0 10px rgba(159, 106, 255, 0.5);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(159, 106, 255, 0.2);
+            color: rgba(156, 100, 250, 0.35);
+            font-size: 14px;
+            width: 100%;
+            max-width: 1200px;
+            padding-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .support-container {
+                padding: 80px 15px 40px;
+            }
+
+            .support-header h1 {
+                font-size: 2.2em;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-box input,
+            .search-box button {
+                border-radius: 14px;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .search-box input {
+                border-radius: 14px;
+            }
+
+            .search-box button {
+                border-radius: 14px;
+                border-left: 2px solid #9f6aff;
+            }
+
+            .help-options {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-question {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .support-header h1 {
+                font-size: 1.8em;
+            }
+
+            .support-card {
+                padding: 20px;
+            }
+
+            .contact-block {
+                padding: 25px 15px;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="scroll-container" id="scroll-container">
+            <div class="burger-container">
+                <input type="checkbox" id="checkbox">
+                <label for="checkbox" class="burger">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </label>
+                <div class="menu">
+                    <a href="/index.html"><i class="fas fa-home"></i> Главная</a>
+                    <a href="/git/html/download.html"><i class="fas fa-download"></i> Скачать</a>
+                    <a href="/git/html/massgen.html"><i class="fas fa-cogs"></i> МассГен</a>
+                    <a href="/git/html/about.html"><i class="fas fa-info-circle"></i> О нас</a>
+                </div>
+            </div>
+
+            <div class="support-container">
+                <header class="support-header fade-in" id="header">
+                    <h1>ЦЕНТР ПОДДЕРЖКИ</h1>
+                    <p>Найдите решение в нашей базе знаний или свяжитесь с технической поддержкой. Мы работаем 24/7 для
+                        вашего комфорта.</p>
+
+                    <div class="search-box">
+                        <input type="text" placeholder="Введите ваш вопрос...">
+                        <button><i class="fas fa-search"></i> ПОИСК</button>
+                    </div>
+                </header>
+
+                <section class="help-options fade-in" id="help">
+                    <div class="support-card">
+                        <i class="fas fa-database"></i>
+                        <h3>БАЗА ЗНАНИЙ</h3>
+                        <p>Полные руководства, документация и технические статьи для самостоятельного решения проблем.
+                        </p>
+                        <a href="#" class="support-link"><i class="fas fa-arrow-right"></i> ОТКРЫТЬ БАЗУ</a>
+                    </div>
+
+                    <div class="support-card">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>ЧАСТЫЕ ВОПРОСЫ</h3>
+                        <p>Быстрые ответы на самые популярные вопросы от пользователей нашей платформы.</p>
+                        <a href="#faq" class="support-link"><i class="fas fa-arrow-down"></i> СМОТРЕТЬ FAQ</a>
+                    </div>
+
+                    <div class="support-card">
+                        <i class="fas fa-headset"></i>
+                        <h3>ТЕХПОДДЕРЖКА</h3>
+                        <p>Прямой контакт с нашей командой экспертов для решения сложных технических вопросов.</p>
+                        <a href="#contact" class="support-link"><i class="fas fa-envelope"></i> НАПИСАТЬ НАМ</a>
+                    </div>
+                </section>
+
+                <section class="faq-section fade-in" id="faq">
+                    <h2>ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
+                    <div class="faq-container">
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Как восстановить доступ к аккаунту?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Используйте функцию "Восстановить пароль" на странице входа. На указанную почту
+                                    придет письмо с инструкциями. Если письмо не пришло, проверьте папку "Спам" или
+                                    свяжитесь с поддержкой.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Как обновить программное обеспечение?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Все обновления доступны в разделе "Загрузки". Рекомендуем включить автообновление в
+                                    настройках программы для получения последних версий автоматически.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Поддерживается ли Linux?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Поддержка Linux пока не запланирована</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Какие системные требования?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Скоро добавим</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="contact-block fade-in" id="contact">
+                    <h3>НУЖНА ПОМОЩЬ?</h3>
+                    <p>Наша команда поддержки доступна круглосуточно</p>
+                    <p><strong>EMAIL:</strong> <a href="mailto:devdarkcore@gmail.com">devdarkcore@gmail.com</a></p>
+                    <p><strong>ТЕЛЕГРАМ:</strong> <a href="https://t.me/ПУСТЫШКА">ПУСТЫШКА</a></p>
+                    <p><strong>ДИСКОРД:</strong> <a href="https://discord.gg/ПУСТЫШКА">discord.gg/ПУСТЫШКА</a></p>
+                    <p style="margin-top: 20px; opacity: 0.7;">Среднее время ответа: 15-30 минут</p>
+                </section>
+
+                <footer class="footer">
+                    <p>DarkCore © 2025 | ВСЕ ПРАВА ЗАЩИЩЕНЫ | all rights reserved</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+
+        document.querySelector('.search-box button').addEventListener('click', function () {
+            const query = document.querySelector('.search-box input').value;
+            if (query.trim() === '') {
+            } else {
+                console.log('Поиск:', query);
+            }
+        });
+        document.querySelector('.search-box input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.search-box button').click();
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('header').classList.add('visible');
+        });
+
+        document.addEventListener('click', function (e) {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
+                document.activeElement.blur();
+            }
+        });
+    </script>
+</body>
+
+</html>

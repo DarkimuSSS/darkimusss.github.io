@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <link rel="icon" href="/git/img/favicon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkCore</title>
+    <link rel="stylesheet" href="/git/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="main-page">
+    <div class="container">
+        <img class="avatar" src="/git/img/avatar1.jpg" alt="Аватар">
+        <p class="tagline">Мой план — это баг. Но он работает.</p>
+        <div class="links">
+            <a class="link" href="https://t.me/DarkimuSSS"><i class="fa-brands fa-telegram"></i> Telegram</a>
+            <a class="link" href="https://discord.com/invite/liledarkimusss"><i class="fa-brands fa-discord"></i>
+                Discord</a>
+            <a class="link" href="https://github.com/DarkimuSSS"><i class="fa-brands fa-github"></i> GitHub</a>
+        </div>
+        <div class="search-container">
+            <input class="search" type="text" placeholder="Поиск..." id="searchInput">
+        </div>
+    </div>
+
+    <div class="burger-container">
+        <label class="burger" for="checkbox">
+            <div></div>
+            <div></div>
+            <div></div>
+        </label>
+        <input type="checkbox" id="checkbox">
+        <nav class="menu">
+            <a href="/index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="/git/html/download.html"><i class="fas fa-download"></i> Скачать</a>
+            <a href="/git/html/massgen.html"><i class="fas fa-cogs"></i> МассГен</a>
+            <a href="/git/html/about.html"><i class="fas fa-info-circle"></i> О нас</a>
+            <a href="/git/html/support.html"><i class="fas fa-question-circle"></i> Поддержка</a>
+        </nav>
+    </div>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+                window.location.href = `https://yandex.ru/search/?text=${encodeURIComponent(e.target.value.trim())}`;
+            }
+        });
+    </script>
+</body>
+
+</html>
