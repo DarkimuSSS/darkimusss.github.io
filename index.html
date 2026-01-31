@@ -2,26 +2,74 @@
 <html lang="ru">
 
 <head>
-    <link rel="icon" href="/git/img/favicon.ico">
+    <link rel="icon" href="/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DarkCore</title>
-    <link rel="stylesheet" href="/git/css/style.css">
+    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="main-page">
+    <div class="bg-grid"></div>
+    <div class="floating-shapes">
+        <div class="shape s1"></div>
+        <div class="shape s2"></div>
+        <div class="shape s3"></div>
+        <div class="shape s4"></div>
+        <div class="shape s5"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+
     <div class="container">
-        <img class="avatar" src="/git/img/avatar1.jpg" alt="Аватар">
-        <p class="tagline">Мой план — это баг. Но он работает.</p>
-        <div class="links">
-            <a class="link" href="https://t.me/DarkimuSSS"><i class="fa-brands fa-telegram"></i> Telegram</a>
-            <a class="link" href="https://discord.com/invite/liledarkimusss"><i class="fa-brands fa-discord"></i>
-                Discord</a>
-            <a class="link" href="https://github.com/DarkimuSSS"><i class="fa-brands fa-github"></i> GitHub</a>
+        <div class="avatar-wrapper">
+            <div class="avatar-glow"></div>
+            <img class="avatar" src="/git/img/avatar1.jpg" alt="Аватар">
+            <div class="avatar-ring"></div>
         </div>
+
+        <h1 class="main-title">DARK<span>CORE</span></h1>
+        <p class="tagline">Мой план — это баг. Но он работает.</p>
+
+        <div class="links">
+            <a class="link" href="https://t.me/DarkimuSSS">
+                <i class="fa-brands fa-telegram"></i>
+                <span>Telegram</span>
+                <div class="link-glow"></div>
+            </a>
+            <a class="link" href="https://discord.com/invite/liledarkimusss">
+                <i class="fa-brands fa-discord"></i>
+                <span>Discord</span>
+                <div class="link-glow"></div>
+            </a>
+            <a class="link" href="https://github.com/DarkimuSSS">
+                <i class="fa-brands fa-github"></i>
+                <span>GitHub</span>
+                <div class="link-glow"></div>
+            </a>
+        </div>
+
         <div class="search-container">
-            <input class="search" type="text" placeholder="Поиск..." id="searchInput">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input class="search" type="text" placeholder="Поиск в киберпространстве..." id="searchInput">
+                <div class="search-line"></div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" data-count="1">0</div>
+                <div class="stat-label">Проект</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" data-count="5">0</div>
+                <div class="stat-label">Пользователей</div>
+            </div>
+            <div class="stat">
+                <span class="infinity-icon">∞</span>
+                <div class="stat-label">Идей</div>
+            </div>
         </div>
     </div>
 
@@ -33,22 +81,99 @@
         </label>
         <input type="checkbox" id="checkbox">
         <nav class="menu">
-            <a href="/index.html"><i class="fas fa-home"></i> Главная</a>
-            <a href="/git/html/download.html"><i class="fas fa-download"></i> Скачать</a>
-            <a href="/git/html/massgen.html"><i class="fas fa-cogs"></i> МассГен</a>
-            <a href="/git/html/about.html"><i class="fas fa-info-circle"></i> О нас</a>
-            <a href="/git/html/support.html"><i class="fas fa-question-circle"></i> Поддержка</a>
+            <a href="/git/html/index.html">
+                <i class="fas fa-home"></i>
+                <span>Главная</span>
+                <div class="menu-item-glow"></div>
+            </a>
+            <a href="/git/html/download.html">
+                <i class="fas fa-download"></i>
+                <span>Скачать</span>
+                <div class="menu-item-glow"></div>
+            </a>
+            <a href="/git/html/massgen.html">
+                <i class="fas fa-cogs"></i>
+                <span>МассГен</span>
+                <div class="menu-item-glow"></div>
+            </a>
+            <a href="/git/html/about.html">
+                <i class="fas fa-info-circle"></i>
+                <span>О нас</span>
+                <div class="menu-item-glow"></div>
+            </a>
+            <a href="/git/html/support.html">
+                <i class="fas fa-question-circle"></i>
+                <span>Поддержка</span>
+                <div class="menu-item-glow"></div>
+            </a>
         </nav>
     </div>
 
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="terminal-title">system@darkcore:~</div>
+        </div>
+        <div class="terminal-content">
+            <div>> Инициализация системы...</div>
+            <div>> Загрузка ядра...</div>
+            <div>> Подключение к сети...</div>
+            <div class="blink">> Готово!</div>
+        </div>
+    </div>
+
     <script>
+        const counters = document.querySelectorAll('.stat-value');
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-count');
+            const increment = target / 200;
+            let current = 0;
+
+            const updateCounter = () => {
+                if (current < target) {
+                    current += increment;
+                    counter.textContent = Math.ceil(current);
+                    setTimeout(updateCounter, 10);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+            updateCounter();
+        });
+
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.width = `${Math.random() * 4 + 1}px`;
+            particle.style.height = particle.style.width;
+            particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            particlesContainer.appendChild(particle);
+        }
+
         document.getElementById('searchInput').addEventListener('keydown', e => {
             if (e.key === 'Enter' && e.target.value.trim()) {
                 window.location.href = `https://yandex.ru/search/?text=${encodeURIComponent(e.target.value.trim())}`;
             }
         });
+
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            document.querySelectorAll('.shape').forEach((shape, index) => {
+                const speed = 0.05 + (index * 0.02);
+                shape.style.transform = `translate(${x * speed * 100}px, ${y * speed * 100}px)`;
+            });
+        });
     </script>
 </body>
-
 
 </html>
