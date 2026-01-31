@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/git/img/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поддержка | DarkCore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/git/css/support.css">
+</head>
+
+<body class="support-body">
+    <!-- Background Effects -->
+    <div class="support-bg"></div>
+    <div class="grid-overlay"></div>
+    <div class="hex-container" id="hexContainer"></div>
+    <div class="scan-line"></div>
+
+    <!-- Burger Menu -->
+    <div class="support-burger" id="burgerButton">
+        <div class="burger-icon"></div>
+        <div class="burger-icon"></div>
+        <div class="burger-icon"></div>
+    </div>
+
+    <div class="support-menu" id="supportMenu">
+        <a href="/index.html" class="menu-link">
+            <i class="fas fa-home"></i>
+            Главная
+        </a>
+        <a href="/git/html/download.html" class="menu-link">
+            <i class="fas fa-download"></i>
+            Скачать
+        </a>
+        <a href="/git/html/massgen.html" class="menu-link">
+            <i class="fas fa-cogs"></i>
+            МассГен
+        </a>
+        <a href="/git/html/about.html" class="menu-link">
+            <i class="fas fa-info-circle"></i>
+            О нас
+        </a>
+        <a href="/git/html/support.html" class="menu-link active">
+            <i class="fas fa-headset"></i>
+            Поддержка
+        </a>
+    </div>
+
+    <!-- Chat Button -->
+    <div class="chat-button" id="chatButton">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <!-- Main Content -->
+    <div class="support-container">
+        <!-- Header -->
+        <header class="support-header">
+            <div class="support-badge">ТЕХНИЧЕСКАЯ ПОДДЕРЖКА</div>
+            <h1 class="support-title">Мы всегда рядом</h1>
+            <p class="support-subtitle">
+                Быстрая помощь, экспертные решения и круглосуточная поддержка для всех пользователей DarkCore
+            </p>
+
+            <div class="support-stats">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Поддержка</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-number">15 мин</div>
+                    <div class="stat-label">Средний ответ</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Удовлетворение</div>
+                </div>
+            </div>
+        </header>
+
+        <section class="help-grid">
+            <div class="help-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="card-title">База знаний</h3>
+                </div>
+                <p class="card-description">
+                    Полные руководства и документация. Более 20 статей с решениями типичных проблем.
+                </p>
+                <a href="#" class="card-button">
+                    <span>Открыть базу</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="help-card priority-card">
+                <div class="priority-tag">ПРИОРИТЕТ</div>
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="card-title">Срочная помощь</h3>
+                </div>
+                <p class="card-description">
+                    Прямой контакт с экспертами. Гарантированный ответ в течение 15 минут.
+                </p>
+                <a href="#contact" class="card-button">
+                    <span>Связаться</span>
+                    <i class="fas fa-bolt"></i>
+                </a>
+            </div>
+
+            <div class="help-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3 class="card-title">Частые вопросы</h3>
+                </div>
+                <p class="card-description">
+                    Ответы на самые популярные вопросы пользователей. Решения для 95% проблем.
+                </p>
+                <a href="#faq" class="card-button">
+                    <span>Смотреть FAQ</span>
+                    <i class="fas fa-arrow-down"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq-section" id="faq">
+            <h2 class="section-title">Частые вопросы</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Как восстановить доступ к аккаунту?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Используйте функцию "Восстановить пароль" на странице входа. На почту придет письмо с
+                        инструкциями.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Как обновить программу?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Все обновления в разделе "Загрузки". Рекомендуем включить автообновление в настройках.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Поддерживается ли Linux?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Поддержка Linux временно не рассматривается.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Какие системные требования?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Пока не выявлены.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="contact-section" id="contact">
+            <h2 class="section-title">Свяжитесь с нами</h2>
+            <p style="text-align: center; color: #b0b0ff; margin-bottom: 40px;">
+                Выберите удобный способ связи
+            </p>
+
+            <div class="contact-grid">
+                <div class="contact-method">
+                    <div class="method-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h4>Email</h4>
+                    <a href="mailto:devdarkcore@gmail.com" class="contact-link">
+                        devdarkcore@gmail.com
+                    </a>
+                </div>
+
+                <div class="contact-method">
+                    <div class="method-icon">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <h4>Telegram</h4>
+                    <a href="https://t.me/DarkimuSSS" class="contact-link">
+                        @DarkimuSSS
+                    </a>
+                </div>
+
+                <div class="contact-method">
+                    <div class="method-icon">
+                        <i class="fab fa-discord"></i>
+                    </div>
+                    <h4>Discord</h4>
+                    <a href="https://discord.com/invite/liledarkimusss" class="contact-link">
+                        discord.gg/liledarkimusss
+                    </a>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-indicator"></div>
+                <span>Онлайн • Сейчас доступны 3 оператора</span>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="support-footer">
+            <p>DarkCore © 2025 | Все права защищены</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Политика конфиденциальности</a>
+                <a href="#" class="footer-link">Условия использования</a>
+                <a href="#" class="footer-link">Сообщить о баге</a>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">
+                Техническая поддержка работает круглосуточно
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Создание шестиугольников
+        function createHexagons() {
+            const container = document.getElementById('hexContainer');
+            for (let i = 0; i < 20; i++) {
+                const hex = document.createElement('div');
+                hex.className = 'hex';
+                hex.style.left = `${Math.random() * 100}%`;
+                hex.style.animationDelay = `${Math.random() * 5}s`;
+                hex.style.animationDuration = `${Math.random() * 10 + 15}s`;
+                container.appendChild(hex);
+            }
+        }
+
+        // Бургер меню
+        const burgerButton = document.getElementById('burgerButton');
+        const supportMenu = document.getElementById('supportMenu');
+
+        burgerButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            supportMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!supportMenu.contains(e.target) && !burgerButton.contains(e.target)) {
+                supportMenu.classList.remove('show');
+            }
+        });
+
+        // FAQ аккордеон
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const isActive = item.classList.contains('active');
+
+                // Закрыть все другие
+                document.querySelectorAll('.faq-item.active').forEach(activeItem => {
+                    if (activeItem !== item) activeItem.classList.remove('active');
+                });
+
+                // Открыть текущий, если был закрыт
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Чат
+        const chatButton = document.getElementById('chatButton');
+        chatButton.addEventListener('click', () => {
+            const messages = [
+                "👋 Привет! Я виртуальный помощник DarkCore.",
+                "Какой у вас вопрос?",
+                "Мы ответим в течение 15 минут ⚡"
+            ];
+
+            // Простая имитация чата
+            let chatWindow = document.createElement('div');
+            chatWindow.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                right: 30px;
+                width: 300px;
+                background: rgba(15, 15, 30, 0.95);
+                backdrop-filter: blur(20px);
+                border: 1px solid #5a0ac8;
+                border-radius: 15px;
+                padding: 20px;
+                z-index: 1001;
+                box-shadow: 0 10px 40px rgba(90, 10, 200, 0.3);
+                color: #ffffff;
+            `;
+
+            chatWindow.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h4 style="margin: 0; color: #00c8ff;">Чат поддержки</h4>
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="background: none; border: none; color: #a0a0ff; cursor: pointer; font-size: 1.2rem;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="chatMessages" style="margin-bottom: 15px;"></div>
+                <div style="display: flex;">
+                    <input type="text" placeholder="Введите сообщение..." 
+                           style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); 
+                                  border: 1px solid #5a0ac8; border-radius: 8px; color: white;">
+                    <button onclick="sendMessage(this.previousElementSibling)" 
+                            style="background: #5a0ac8; color: white; border: none; 
+                                   padding: 10px 15px; border-radius: 8px; margin-left: 10px; cursor: pointer;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(chatWindow);
+
+            // Показать приветственные сообщения
+            const chatMessages = chatWindow.querySelector('#chatMessages');
+            let delay = 0;
+            messages.forEach(msg => {
+                setTimeout(() => {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.style.cssText = `
+                        background: rgba(90, 10, 200, 0.2);
+                        padding: 10px 15px;
+                        border-radius: 10px;
+                        margin-bottom: 10px;
+                        animation: fadeIn 0.3s ease;
+                    `;
+                    msgDiv.textContent = msg;
+                    chatMessages.appendChild(msgDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, delay);
+                delay += 1000;
+            });
+        });
+
+        // Функция отправки сообщения
+        window.sendMessage = function (input) {
+            if (input.value.trim()) {
+                const chatMessages = document.querySelector('#chatMessages');
+                const msgDiv = document.createElement('div');
+                msgDiv.style.cssText = `
+                    background: rgba(0, 200, 255, 0.2);
+                    padding: 10px 15px;
+                    border-radius: 10px;
+                    margin-bottom: 10px;
+                    text-align: right;
+                    animation: fadeIn 0.3s ease;
+                `;
+                msgDiv.textContent = input.value;
+                chatMessages.appendChild(msgDiv);
+                input.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Имитация ответа
+                setTimeout(() => {
+                    const replyDiv = document.createElement('div');
+                    replyDiv.style.cssText = `
+                        background: rgba(90, 10, 200, 0.2);
+                        padding: 10px 15px;
+                        border-radius: 10px;
+                        margin-bottom: 10px;
+                        animation: fadeIn 0.3s ease;
+                    `;
+                    replyDiv.textContent = "Понял! Передаю ваш вопрос оператору...";
+                    chatMessages.appendChild(replyDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+        };
+
+        // Плавная прокрутка для якорей
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            createHexagons();
+
+            // Анимация сканирующей линии
+            setTimeout(() => {
+                const scanLine = document.querySelector('.scan-line');
+                scanLine.style.animation = 'scan 8s linear infinite';
+            }, 500);
+        });
+
+        // Параллакс эффект для фона
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+
+            const bg = document.querySelector('.support-bg');
+            bg.style.transform = `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
+        });
+    </script>
+</body>
+
+</html>

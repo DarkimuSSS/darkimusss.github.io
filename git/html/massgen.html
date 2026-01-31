@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/git/img/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MassGen | DarkCore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/git/css/massgen.css">
+</head>
+
+<body class="about-body">
+    <!-- Cosmic Background -->
+    <div class="about-bg"></div>
+    <div class="stars" id="stars"></div>
+    <div class="orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <!-- Burger Menu -->
+    <div class="about-burger" id="burgerButton">
+        <div class="burger-line"></div>
+        <div class="burger-line"></div>
+        <div class="burger-line"></div>
+    </div>
+
+    <div class="about-menu" id="aboutMenu">
+        <a href="/index.html" class="menu-item">
+            <i class="fas fa-home"></i>
+            Главная
+        </a>
+        <a href="/git/html/download.html" class="menu-item">
+            <i class="fas fa-download"></i>
+            Скачать
+        </a>
+        <a href="/git/html/massgen.html" class="menu-item active">
+            <i class="fas fa-cogs"></i>
+            МассГен
+        </a>
+        <a href="/git/html/about.html" class="menu-item">
+            <i class="fas fa-info-circle"></i>
+            О нас
+        </a>
+        <a href="/git/html/support.html" class="menu-item">
+            <i class="fas fa-headset"></i>
+            Поддержка
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="about-container">
+        <!-- Hero Section -->
+        <section class="about-hero">
+            <div class="hero-glow"></div>
+            <h1 class="about-title"><i class="fas fa-code"></i> MASSGEN</h1>
+            <p class="about-subtitle">
+                Онлайн генератор для создания множества комбинаций по заданным параметрам и шаблонам
+            </p>
+        </section>
+
+        <!-- Generator Interface -->
+        <section class="mission-grid">
+            <div class="mission-card" style="grid-column: span 3;">
+                <div class="mission-icon">
+                    <i class="fas fa-sliders-h"></i>
+                </div>
+                <h3 class="mission-title">Интерфейс генератора</h3>
+
+                <!-- Параметры -->
+                <div id="columnsContainer" style="margin-top: 20px;"></div>
+
+                <!-- Кнопки управления колонками -->
+                <div style="display: flex; gap: 10px; margin: 20px 0;">
+                    <button id="addColumnBtn"
+                        style="flex: 1; padding: 12px; background: linear-gradient(45deg, #6414b4, #14b4ff); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-plus"></i> Добавить параметр
+                    </button>
+                    <button id="removeColumnBtn"
+                        style="flex: 1; padding: 12px; background: rgba(255, 50, 50, 0.3); border: 1px solid rgba(255, 50, 50, 0.5); border-radius: 10px; color: #ff8888; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-minus"></i> Удалить параметр
+                    </button>
+                </div>
+
+                <!-- Шаблоны -->
+                <div style="margin-top: 30px;">
+                    <h4 style="color: #ffffff; margin-bottom: 10px;">
+                        <i class="fas fa-file-code"></i> Шаблоны (используйте {1}, {2}, ...):
+                    </h4>
+                    <div class="variable-list" id="variableList" style="margin-bottom: 10px;"></div>
+                    <textarea id="templates"
+                        style="width: 100%; min-height: 120px; padding: 15px; background: rgba(10, 10, 20, 0.5); border: 1px solid rgba(100, 20, 180, 0.3); border-radius: 10px; color: #b0b0ff; font-family: 'Courier New', monospace; resize: vertical;"
+                        placeholder="Введите шаблоны, каждый с новой строки
+Пример:
+username:{1}:{2}
+email:{1}.{2}@domain.com
+{3}_{1}_{2}"></textarea>
+                </div>
+
+                <!-- Кнопки действий -->
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button id="generateBtn"
+                        style="flex: 2; padding: 15px; background: linear-gradient(45deg, #6414b4, #14b4ff); border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 1.1rem; cursor: pointer;">
+                        <i class="fas fa-bolt"></i> Сгенерировать
+                    </button>
+                    <button id="copyBtn"
+                        style="flex: 1; padding: 15px; background: rgba(20, 180, 255, 0.2); border: 1px solid rgba(20, 180, 255, 0.5); border-radius: 10px; color: #14b4ff; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-copy"></i> Копировать
+                    </button>
+                    <button id="clearBtn"
+                        style="flex: 1; padding: 15px; background: rgba(255, 50, 50, 0.2); border: 1px solid rgba(255, 50, 50, 0.5); border-radius: 10px; color: #ff8888; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-trash"></i> Очистить
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Section -->
+        <section class="timeline-section">
+            <h2 class="section-title">Результат</h2>
+            <div
+                style="background: rgba(20, 20, 35, 0.7); border-radius: 15px; padding: 25px; border: 1px solid rgba(100, 20, 180, 0.3); backdrop-filter: blur(10px);">
+                <div id="result"
+                    style="color: #b0b0ff; font-family: 'Courier New', monospace; white-space: pre-wrap; min-height: 200px; max-height: 400px; overflow-y: auto; padding: 15px; background: rgba(10, 10, 20, 0.5); border-radius: 8px;">
+                </div>
+                <div id="resultStats" style="margin-top: 15px; color: #8080ff; font-size: 0.9rem;"></div>
+                <div id="status" style="margin-top: 15px; padding: 10px; border-radius: 5px; display: none;"></div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="team-section">
+            <h2 class="section-title">Возможности MassGen</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3 class="member-name">Неограниченно</h3>
+                    <div class="member-role">Колонки и шаблоны</div>
+                    <p class="member-bio">Добавляйте любое количество параметров и шаблонов для генерации</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="member-name">Переменные</h3>
+                    <div class="member-role">{1}, {2}, {3}, ...</div>
+                    <p class="member-bio">Используйте простые переменные для подстановки значений</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="member-name">Быстро</h3>
+                    <div class="member-role">Мгновенная генерация</div>
+                    <p class="member-bio">Генерация тысяч комбинаций за доли секунды</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <h3 class="member-name">Копирование</h3>
+                    <div class="member-role">В один клик</div>
+                    <p class="member-bio">Копируйте результат прямо в буфер обмена</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Examples -->
+        <section class="values-section">
+            <h2 class="section-title">Примеры использования</h2>
+            <div class="values-grid">
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="value-title">Логины</h3>
+                    <p style="color: #b0b0ff; font-size: 0.9rem;">Генерация username:password</p>
+                </div>
+
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="value-title">Email</h3>
+                    <p style="color: #b0b0ff; font-size: 0.9rem;">Создание списков email</p>
+                </div>
+
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="value-title">Тесты</h3>
+                    <p style="color: #b0b0ff; font-size: 0.9rem;">Тестовые данные для разработки</p>
+                </div>
+
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-random"></i>
+                    </div>
+                    <h3 class="value-title">Комбинации</h3>
+                    <p style="color: #b0b0ff; font-size: 0.9rem;">Любые комбинации значений</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="about-footer">
+            <p>DarkCore MassGen v2.1 | Онлайн генератор комбинаций</p>
+            <div class="footer-links">
+                <a href="https://github.com/DarkimuSSS" class="footer-link">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://t.me/DarkimuSSS" class="footer-link">
+                    <i class="fab fa-telegram"></i> Telegram
+                </a>
+                <a href="https://discord.com/invite/liledarkimusss" class="footer-link">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+                <a href="mailto:devdarkcore@gmail.com" class="footer-link">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">
+                Генератор для создания тестовых данных и комбинаций
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Create stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 3 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDuration = `${Math.random() * 5 + 2}s`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Burger menu
+        const burgerButton = document.getElementById('burgerButton');
+        const aboutMenu = document.getElementById('aboutMenu');
+
+        burgerButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            aboutMenu.classList.toggle('show');
+
+            const lines = burgerButton.querySelectorAll('.burger-line');
+            if (aboutMenu.classList.contains('show')) {
+                lines[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
+                lines[1].style.opacity = '0';
+                lines[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
+            } else {
+                lines[0].style.transform = 'none';
+                lines[1].style.opacity = '1';
+                lines[2].style.transform = 'none';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!aboutMenu.contains(e.target) && !burgerButton.contains(e.target)) {
+                aboutMenu.classList.remove('show');
+                const lines = burgerButton.querySelectorAll('.burger-line');
+                lines[0].style.transform = 'none';
+                lines[1].style.opacity = '1';
+                lines[2].style.transform = 'none';
+            }
+        });
+
+        // Parallax effect
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+
+            const orbs = document.querySelector('.orbs');
+            const bg = document.querySelector('.about-bg');
+
+            orbs.style.transform = `translate(${mouseX * 30}px, ${mouseY * 30}px)`;
+            bg.style.transform = `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
+        });
+
+        // MassGen Logic
+        let columnCount = 3;
+
+        function initColumns() {
+            const container = document.getElementById('columnsContainer');
+            container.innerHTML = '';
+            container.style.display = 'grid';
+            container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(250px, 1fr))';
+            container.style.gap = '15px';
+            container.style.marginBottom = '20px';
+
+            for (let i = 1; i <= columnCount; i++) {
+                const column = document.createElement('div');
+                column.innerHTML = `
+                    <div style="background: rgba(10, 10, 20, 0.5); border: 1px solid rgba(100, 20, 180, 0.3); border-radius: 10px; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h4 style="color: #ffffff; margin: 0;">
+                                <i class="fas fa-hashtag"></i> Параметр {${i}}
+                            </h4>
+                            <div style="display: flex; gap: 5px;">
+                                <button onclick="moveColumn(${i}, -1)" ${i === 1 ? 'disabled' : ''} 
+                                        style="padding: 5px 10px; background: rgba(100, 20, 180, 0.3); border: 1px solid rgba(100, 20, 180, 0.5); border-radius: 5px; color: #b0b0ff; cursor: pointer; font-size: 12px;">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <button onclick="moveColumn(${i}, 1)" ${i === columnCount ? 'disabled' : ''}
+                                        style="padding: 5px 10px; background: rgba(20, 180, 255, 0.3); border: 1px solid rgba(20, 180, 255, 0.5); border-radius: 5px; color: #b0b0ff; cursor: pointer; font-size: 12px;">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <textarea id="param${i}" 
+                                  style="width: 100%; min-height: 100px; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(100, 20, 180, 0.2); border-radius: 5px; color: #b0b0ff; font-family: 'Courier New', monospace; resize: vertical;"
+                                  placeholder="Значения для {${i}}...\nКаждый с новой строки"></textarea>
+                    </div>
+                `;
+                container.appendChild(column);
+            }
+
+            updateVariableList();
+        }
+
+        function updateVariableList() {
+            const variableList = document.getElementById('variableList');
+            variableList.innerHTML = '';
+
+            for (let i = 1; i <= columnCount; i++) {
+                const tag = document.createElement('span');
+                tag.style.display = 'inline-block';
+                tag.style.padding = '5px 10px';
+                tag.style.margin = '3px';
+                tag.style.background = 'rgba(100, 20, 180, 0.3)';
+                tag.style.border = '1px solid rgba(100, 20, 180, 0.5)';
+                tag.style.borderRadius = '5px';
+                tag.style.color = '#b0b0ff';
+                tag.style.fontSize = '12px';
+                tag.style.cursor = 'pointer';
+                tag.style.transition = 'all 0.2s';
+                tag.textContent = `{${i}}`;
+
+                tag.onmouseover = () => {
+                    tag.style.background = 'rgba(100, 20, 180, 0.5)';
+                    tag.style.transform = 'translateY(-2px)';
+                };
+                tag.onmouseout = () => {
+                    tag.style.background = 'rgba(100, 20, 180, 0.3)';
+                    tag.style.transform = 'none';
+                };
+                tag.onclick = () => insertVariable(i);
+
+                variableList.appendChild(tag);
+            }
+        }
+
+        function insertVariable(num) {
+            const textarea = document.getElementById('templates');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const variable = `{${num}}`;
+
+            textarea.value = textarea.value.substring(0, start) +
+                variable +
+                textarea.value.substring(end);
+
+            textarea.focus();
+            textarea.setSelectionRange(start + variable.length, start + variable.length);
+        }
+
+        function moveColumn(index, direction) {
+            if (index + direction < 1 || index + direction > columnCount) return;
+
+            const currentTextarea = document.getElementById(`param${index}`);
+            const targetTextarea = document.getElementById(`param${index + direction}`);
+
+            const temp = currentTextarea.value;
+            currentTextarea.value = targetTextarea.value;
+            targetTextarea.value = temp;
+
+            showStatus(`Колонка {${index}} перемещена`, 'success');
+        }
+
+        function generate() {
+            const params = [];
+            let maxLength = 0;
+
+            for (let i = 1; i <= columnCount; i++) {
+                const textarea = document.getElementById(`param${i}`);
+                if (textarea) {
+                    const items = textarea.value.split('\n').map(l => l.trim()).filter(l => l);
+                    params.push(items);
+                    maxLength = Math.max(maxLength, items.length);
+                }
+            }
+
+            const templatesText = document.getElementById('templates').value;
+            const templates = templatesText.split('\n').map(l => l.trim()).filter(l => l);
+
+            let hasEmptyColumns = false;
+            params.forEach((items, idx) => {
+                if (items.length === 0) {
+                    showStatus(`Колонка {${idx + 1}} пуста!`, 'warning');
+                    hasEmptyColumns = true;
+                }
+            });
+
+            if (hasEmptyColumns || templates.length === 0) {
+                showStatus('Заполните все колонки и шаблоны!', 'warning');
+                return;
+            }
+
+            const minLength = Math.min(...params.map(p => p.length));
+            const setCount = minLength;
+
+            let result = '';
+            let totalLines = 0;
+
+            templates.forEach(template => {
+                for (let i = 0; i < setCount; i++) {
+                    let line = template;
+                    for (let j = 1; j <= columnCount; j++) {
+                        const paramValue = params[j - 1][i] || '';
+                        const regex = new RegExp(`\\{${j}\\}`, 'g');
+                        line = line.replace(regex, paramValue);
+                    }
+                    result += line + '\n';
+                    totalLines++;
+                }
+                result += '\n';
+            });
+
+            document.getElementById('result').textContent = result.trim();
+
+            const stats = document.getElementById('resultStats');
+            stats.innerHTML = `
+                <div style="margin-top: 10px; color: #14b4ff; font-size: 14px;">
+                    <strong><i class="fas fa-chart-bar"></i> Результат:</strong> 
+                    ${totalLines} строк, 
+                    ${setCount} наборов, 
+                    ${templates.length} шаблонов, 
+                    ${columnCount} параметров
+                </div>
+            `;
+
+            showStatus(`Сгенерировано ${totalLines} строк`, 'success');
+        }
+
+        function copyResult() {
+            const text = document.getElementById('result').textContent;
+            if (!text.trim()) {
+                showStatus('Нет результата для копирования', 'warning');
+                return;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                showStatus('Результат скопирован в буфер обмена', 'success');
+            }).catch(err => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showStatus('Результат скопирован', 'success');
+            });
+        }
+
+        function clearAll() {
+            for (let i = 1; i <= columnCount; i++) {
+                const textarea = document.getElementById(`param${i}`);
+                if (textarea) textarea.value = '';
+            }
+            document.getElementById('templates').value = '';
+            document.getElementById('result').textContent = '';
+            document.getElementById('resultStats').innerHTML = '';
+            showStatus('Все поля очищены', 'success');
+        }
+
+        function showStatus(message, type = 'info') {
+            const statusBar = document.getElementById('status');
+            statusBar.style.display = 'block';
+            statusBar.textContent = message;
+            statusBar.style.padding = '10px';
+            statusBar.style.borderRadius = '5px';
+            statusBar.style.marginTop = '10px';
+            statusBar.style.fontWeight = '600';
+
+            if (type === 'success') {
+                statusBar.style.background = 'rgba(0, 255, 136, 0.1)';
+                statusBar.style.border = '1px solid rgba(0, 255, 136, 0.3)';
+                statusBar.style.color = '#00ff88';
+            } else if (type === 'warning') {
+                statusBar.style.background = 'rgba(255, 170, 0, 0.1)';
+                statusBar.style.border = '1px solid rgba(255, 170, 0, 0.3)';
+                statusBar.style.color = '#ffaa00';
+            } else if (type === 'error') {
+                statusBar.style.background = 'rgba(255, 68, 68, 0.1)';
+                statusBar.style.border = '1px solid rgba(255, 68, 68, 0.3)';
+                statusBar.style.color = '#ff4444';
+            } else {
+                statusBar.style.background = 'rgba(20, 180, 255, 0.1)';
+                statusBar.style.border = '1px solid rgba(20, 180, 255, 0.3)';
+                statusBar.style.color = '#14b4ff';
+            }
+
+            setTimeout(() => {
+                statusBar.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            initColumns();
+
+            document.getElementById('addColumnBtn').addEventListener('click', () => {
+                columnCount++;
+                initColumns();
+                showStatus(`Добавлен параметр {${columnCount}}`, 'success');
+            });
+
+            document.getElementById('removeColumnBtn').addEventListener('click', () => {
+                if (columnCount > 1) {
+                    columnCount--;
+                    initColumns();
+                    showStatus(`Удален параметр {${columnCount + 1}}`, 'success');
+                } else {
+                    showStatus('Нельзя удалить последний параметр!', 'warning');
+                }
+            });
+
+            document.getElementById('generateBtn').addEventListener('click', generate);
+            document.getElementById('copyBtn').addEventListener('click', copyResult);
+            document.getElementById('clearBtn').addEventListener('click', clearAll);
+
+            setTimeout(() => {
+                showStatus('MassGen v2.1 готов к работе! Добавьте данные в параметры и шаблоны.', 'info');
+            }, 500);
+        });
+
+        // Interactive orb glow on click
+        document.addEventListener('click', (e) => {
+            const orbs = document.querySelectorAll('.orb');
+            orbs.forEach(orb => {
+                orb.style.opacity = '0.2';
+                setTimeout(() => {
+                    orb.style.opacity = '0.1';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+
+</html>
