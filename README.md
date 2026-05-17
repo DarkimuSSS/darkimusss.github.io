@@ -1,2 +1,0 @@
-# DarkCore
-DarkimuSSS / DarkCore Website
