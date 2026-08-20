@@ -1,4 +1,20 @@
 (function () {
+    const typewriterSpan = document.getElementById('typewriter');
+    if (typewriterSpan) {
+        const text = "Мой план — это баг. Но он работает.";
+        let index = 0;
+        function type() {
+            if (index < text.length) {
+                typewriterSpan.textContent += text.charAt(index);
+                index++;
+                setTimeout(type, 75);
+            } else {
+                typewriterSpan.classList.add('typing-done');
+            }
+        }
+        setTimeout(type, 600);
+    }
+
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('keydown', (e) => {

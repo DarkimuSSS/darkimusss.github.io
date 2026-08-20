@@ -223,6 +223,28 @@ body::after {
     animation: softPulse 2s infinite alternate ease-in-out;
 }
 
+#typewriter {
+    position: relative;
+    padding-right: 2px;
+}
+
+#typewriter::after {
+    content: '|';
+    position: absolute;
+    right: -4px;
+    color: var(--accent-cyan);
+    animation: blinkCursor 0.8s step-end infinite;
+}
+
+#typewriter.typing-done::after {
+    display: none;
+}
+
+@keyframes blinkCursor {
+    from, to { color: transparent }
+    50% { color: var(--accent-cyan) }
+}
+
 @keyframes softPulse {
     0% {
         text-shadow: 0 0 4px var(--accent-cyan);
