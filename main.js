@@ -63,10 +63,10 @@
     const links = document.querySelectorAll('.link');
     links.forEach(link => {
         link.addEventListener('mouseenter', () => {
-            document.querySelector('.main-title')?.style.setProperty('text-shadow', '0 0 12px cyan');
+            document.querySelector('.main-title')?.style.setProperty('text-shadow', '0 0 12px var(--accent-purple)');
         });
         link.addEventListener('mouseleave', () => {
-            document.querySelector('.main-title')?.style.setProperty('text-shadow', '0 0 8px rgba(0, 255, 255, 0.5)');
+            document.querySelector('.main-title')?.style.setProperty('text-shadow', '0 0 8px rgba(56, 189, 248, 0.5)');
         });
     });
 
@@ -74,7 +74,7 @@
     if (!favicon) {
         const newFavicon = document.createElement('link');
         newFavicon.rel = 'icon';
-        newFavicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2300ffff' stroke='%23ff44dd' stroke-width='4' /%3E%3Ctext x='50' y='68' font-size='50' text-anchor='middle' fill='black' font-weight='bold'%3ED%3C/text%3E%3C/svg%3E";
+        newFavicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2338bdf8' stroke='%23a855f7' stroke-width='4' /%3E%3Ctext x='50' y='68' font-size='50' text-anchor='middle' fill='black' font-weight='bold'%3ED%3C/text%3E%3C/svg%3E";
         document.head.appendChild(newFavicon);
     }
 
