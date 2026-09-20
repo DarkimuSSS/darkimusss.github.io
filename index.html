@@ -5,11 +5,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>GitHub | darkimusss</title>
+    <link rel="icon" type="image/jpeg" href="favicon.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="favicon.jpg">
+    <link rel="apple-touch-icon" href="favicon.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <div class="bg-theme-layer dark-bg"></div>
+    <div class="bg-theme-layer light-bg"></div>
+    <canvas id="fxCanvas"></canvas>
+
+    <div class="top-controls">
+        <!-- Cyber System Time & Date Widget -->
+        <div class="system-time-widget" id="systemTimeWidget" data-tooltip-key="tooltip_time">
+            <div class="time-block time-main">
+                <i class="fa-regular fa-clock time-icon"></i>
+                <span id="timeHours">00</span><span class="time-colon">:</span><span id="timeMinutes">00</span><span
+                    class="time-colon">:</span><span id="timeSeconds">00</span>
+                <span class="time-zone" id="timeZone">MSK</span>
+            </div>
+            <div class="time-divider"></div>
+            <div class="time-block time-date">
+                <i class="fa-regular fa-calendar-days date-icon"></i>
+                <span id="timeDate">21 СЕН 2026</span>
+            </div>
+        </div>
+
+        <button id="langToggle" class="control-btn" data-tooltip-key="tooltip_lang" aria-label="Переключить язык">
+            <i class="fas fa-globe"></i>
+            <span class="btn-text" id="langLabel">RU</span>
+        </button>
+
+        <button id="themeToggle" class="control-btn" data-tooltip-key="tooltip_theme" aria-label="Сменить тему">
+            <i class="fas fa-sun" id="themeIcon"></i>
+            <span class="btn-text" id="themeLabel">THEME</span>
+        </button>
+
+        <button id="servicesBtn" class="control-btn" data-tooltip-key="tooltip_services" aria-label="Сервисы">
+            <i class="fa-solid fa-server"></i>
+            <span class="btn-text" data-i18n="btn_services">Сервисы</span>
+        </button>
+
+        <button id="ghWidgetBtn" class="control-btn" data-tooltip-key="tooltip_activity" aria-label="GitHub Активность">
+            <i class="fa-brands fa-github"></i>
+            <span class="btn-text" data-i18n="btn_activity">GitHub</span>
+        </button>
+
+        <button id="soundToggle" class="control-btn" data-tooltip-key="tooltip_sound" aria-label="Звуковой эффект">
+            <i class="fas fa-volume-mute" id="soundIcon"></i>
+            <span class="btn-text">SFX</span>
+        </button>
+
+        <div class="mode-selector" id="bgModeToggle">
+            <button class="mode-btn active" data-mode="grid" data-tooltip-key="tooltip_mode_grid"
+                aria-label="Стандартный фон">
+                <i class="fas fa-border-all"></i>
+            </button>
+            <button class="mode-btn" data-mode="matrix" data-tooltip-key="tooltip_mode_matrix"
+                aria-label="Режим Matrix Rain">
+                <i class="fas fa-code"></i>
+            </button>
+            <button class="mode-btn" data-mode="particles" data-tooltip-key="tooltip_mode_particles"
+                aria-label="Режим Неоновые частицы">
+                <i class="fas fa-atom"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 5 Quick Access Vertical Dock (Left Edge Side) -->
+    <div class="quick-cards-dock">
+        <a href="https://www.youtube.com/" class="quick-card youtube" target="_blank" rel="noopener noreferrer"
+            data-tooltip="YouTube">
+            <i class="fa-brands fa-youtube card-icon"></i>
+            <span class="card-name">YouTube</span>
+            <div class="quick-card-glow"></div>
+        </a>
+        <a href="https://www.tiktok.com/" class="quick-card tiktok" target="_blank" rel="noopener noreferrer"
+            data-tooltip="TikTok">
+            <i class="fa-brands fa-tiktok card-icon"></i>
+            <span class="card-name">TikTok</span>
+            <div class="quick-card-glow"></div>
+        </a>
+        <a href="https://www.twitch.tv/" class="quick-card twitch" target="_blank" rel="noopener noreferrer"
+            data-tooltip="Twitch">
+            <i class="fa-brands fa-twitch card-icon"></i>
+            <span class="card-name">Twitch</span>
+            <div class="quick-card-glow"></div>
+        </a>
+        <a href="https://discord.com/" class="quick-card discord" target="_blank" rel="noopener noreferrer"
+            data-tooltip="Discord">
+            <i class="fa-brands fa-discord card-icon"></i>
+            <span class="card-name">Discord</span>
+            <div class="quick-card-glow"></div>
+        </a>
+    </div>
+
     <div class="bg-grid"></div>
     <div class="floating-shapes">
         <div class="shape shape1"></div>
@@ -20,6 +112,7 @@
         <div class="shape shape6"></div>
     </div>
 
+    <!-- Main Clean Landing Container -->
     <div class="container">
         <div class="avatar-wrapper">
             <div class="avatar-glow"></div>
@@ -33,36 +126,242 @@
         <div class="links">
             <a class="link" href="https://t.me/DarkimuSSS" target="_blank" rel="noopener noreferrer">
                 <i class="fa-brands fa-telegram"></i>
-                <span>Telegram</span>
+                <span data-i18n="link_telegram">Telegram</span>
                 <div class="link-glow"></div>
             </a>
-            <a class="link" href="https://control.dark-core.ru/" target="_blank" rel="noopener noreferrer">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                            </svg>
-                <span>Сайт</span>
+            <a class="link" href="https://dark-core.ru/" target="_blank" rel="noopener noreferrer">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                    </path>
+                </svg>
+                <span data-i18n="link_site">Сайт</span>
                 <div class="link-glow"></div>
             </a>
             <a class="link" href="https://github.com/DarkimuSSS" target="_blank" rel="noopener noreferrer">
                 <i class="fa-brands fa-github"></i>
-                <span>GitHub</span>
+                <span data-i18n="link_github">GitHub</span>
                 <div class="link-glow"></div>
             </a>
-        </div>
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input class="search" type="text" placeholder="Поиск в Google / Enter →" id="searchInput"
+                        data-i18n-ph="search_placeholder">
+                    <div class="search-line"></div>
+                </div>
+            </div>
 
-        <div class="search-container">
-            <div class="search-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input class="search" type="text" placeholder="🔍 Поиск в Google / Enter →" id="searchInput">
-                <div class="search-line"></div>
+            <div class="terminal-tag">
+                <i class="fas fa-terminal"></i> // darkimusss
             </div>
         </div>
 
-        <div style="margin-top: 2.2rem; font-size: 0.7rem; opacity: 0.5; color: #aaf;">
-            <i class="fas fa-terminal"></i> // darkimusss
+        <!-- Modal 1: Dark-Core Infrastructure & Services -->
+        <div class="modal-overlay" id="servicesModalOverlay">
+            <div class="services-widget modal-box">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <i class="fa-solid fa-server"></i>
+                        <span data-i18n="services_header">Инфраструктура & Сервисы</span>
+                    </div>
+                    <button class="modal-close-btn" id="closeServicesModal" title="Закрыть">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="services-grid">
+                    <a href="https://control.dark-core.ru/" class="service-card" target="_blank"
+                        rel="noopener noreferrer">
+                        <div class="service-card-top">
+                            <div class="service-icon">
+                                <i class="fa-solid fa-sliders"></i>
+                            </div>
+                            <span class="service-badge active"><span class="badge-dot"></span> <span
+                                    data-i18n="badge_active">АКТИВЕН</span></span>
+                        </div>
+                        <div class="service-info">
+                            <h3 class="service-name">Control Center</h3>
+                            <span class="service-domain">control.dark-core.ru</span>
+                            <p class="service-desc" data-i18n="control_desc">Панель мониторинга серверов</p>
+                        </div>
+                    </a>
+
+                    <a href="https://wiki.dark-core.ru/" class="service-card" target="_blank" rel="noopener noreferrer">
+                        <div class="service-card-top">
+                            <div class="service-icon">
+                                <i class="fa-solid fa-book-atlas"></i>
+                            </div>
+                            <span class="service-badge active"><span class="badge-dot"></span> <span
+                                    data-i18n="badge_active">АКТИВЕН</span></span>
+                        </div>
+                        <div class="service-info">
+                            <h3 class="service-name">Wiki CubixWorld</h3>
+                            <span class="service-domain">wiki.dark-core.ru</span>
+                            <p class="service-desc" data-i18n="wiki_desc">База знаний, гайды и правила</p>
+                        </div>
+                    </a>
+
+                    <div class="service-card offline" title="Сервис временно недоступен">
+                        <div class="service-card-top">
+                            <div class="service-icon">
+                                <i class="fa-solid fa-network-wired"></i>
+                            </div>
+                            <span class="service-badge offline" data-i18n="badge_offline">ОТКЛЮЧЕН</span>
+                        </div>
+                        <div class="service-info">
+                            <h3 class="service-name" data-i18n="projects_name">Проекты</h3>
+                            <span class="service-domain">projects.dark-core.ru</span>
+                            <p class="service-desc" data-i18n="projects_desc">Каталог актуальных разработок</p>
+                        </div>
+                    </div>
+
+                    <div class="service-card offline" title="Сервис временно недоступен">
+                        <div class="service-card-top">
+                            <div class="service-icon">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <span class="service-badge offline" data-i18n="badge_offline">ОТКЛЮЧЕН</span>
+                        </div>
+                        <div class="service-info">
+                            <h3 class="service-name">Dark-Core ID</h3>
+                            <span class="service-domain">sso.dark-core.ru</span>
+                            <p class="service-desc" data-i18n="sso_desc">Единая система авторизации (SSO)</p>
+                        </div>
+                    </div>
+
+                    <a href="https://www.speedtest.net/" class="service-card" target="_blank" rel="noopener noreferrer">
+                        <div class="service-card-top">
+                            <div class="service-icon">
+                                <i class="fa-solid fa-gauge-high"></i>
+                            </div>
+                            <span class="service-badge active"><span class="badge-dot"></span> <span
+                                    data-i18n="badge_active">АКТИВЕН</span></span>
+                        </div>
+                        <div class="service-info">
+                            <h3 class="service-name">Speedtest</h3>
+                            <span class="service-domain">speedtest.net</span>
+                            <p class="service-desc" data-i18n="speedtest_desc">Измерение скорости соединения</p>
+                        </div>
+                    </a>
+
+                    <a href="https://www.google.com/" class="service-card" target="_blank" rel="noopener noreferrer">
+                        <div class="service-card-top">
+                            <div class="service-icon">
+                                <i class="fa-solid fa-earth-americas"></i>
+                            </div>
+                            <span class="service-badge active"><span class="badge-dot"></span> <span
+                                    data-i18n="badge_active">АКТИВЕН</span></span>
+                        </div>
+                        <div class="service-info">
+                            <h3 class="service-name">Google</h3>
+                            <span class="service-domain">google.com</span>
+                            <p class="service-desc" data-i18n="google_desc">Поиск в интернете</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-    <script src="main.js"></script>
+
+        <!-- Modal 2: GitHub Activity Widget -->
+        <div class="modal-overlay" id="ghModalOverlay">
+            <div class="github-widget modal-box" id="githubWidget">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <i class="fa-brands fa-github"></i>
+                        <span data-i18n="gh_header">GitHub Активность</span>
+                    </div>
+                    <div class="header-right-controls">
+                        <div class="status-badge" id="ghStatusBadge">
+                            <span class="status-dot"></span>
+                            <span id="statusText" data-i18n="status_loading">Загрузка...</span>
+                        </div>
+                        <button class="modal-close-btn" id="closeGhModal" title="Закрыть">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="widget-stats" id="widgetStats">
+                    <div class="stat-box">
+                        <span class="stat-num" id="statRepos">-</span>
+                        <span class="stat-label" data-i18n="stat_repos">Репозитории</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-num" id="statFollowers">-</span>
+                        <span class="stat-label" data-i18n="stat_followers">Подписчики</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-num" id="statStars">-</span>
+                        <span class="stat-label" data-i18n="stat_stars">Звёзды</span>
+                    </div>
+                </div>
+
+                <div class="repos-grid" id="reposGrid">
+                    <div class="repo-skeleton"></div>
+                    <div class="repo-skeleton"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal 3: Cyberpunk Netrunner Hacker Mini-Game -->
+        <div class="modal-overlay" id="hackerModalOverlay">
+            <div class="hacker-widget modal-box">
+                <div class="widget-header hacker-header">
+                    <div class="widget-title">
+                        <i class="fa-solid fa-terminal"></i>
+                        <span data-i18n="hacker_title">NETRUNNER BREACH PROTOCOL</span>
+                    </div>
+                    <div class="hacker-controls">
+                        <span class="hacker-badge" id="hackerLevel">LEVEL 1</span>
+                        <button class="modal-close-btn" id="closeHackerModal" title="Закрыть">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hacker-body">
+                    <div class="hacker-top-info">
+                        <div class="hacker-timer-box">
+                            <span class="hacker-label" data-i18n="hacker_timer">TIME REMAINING:</span>
+                            <span class="hacker-timer-val" id="hackerTimer">20.0s</span>
+                        </div>
+                        <div class="hacker-score-box">
+                            <span class="hacker-label" data-i18n="hacker_score">SCORE:</span>
+                            <span class="hacker-score-val" id="hackerScore">0</span>
+                        </div>
+                    </div>
+
+                    <div class="hacker-target-section">
+                        <span class="hacker-label" data-i18n="hacker_target">TARGET SEQUENCE:</span>
+                        <div class="hacker-sequence" id="hackerTargetSeq"></div>
+                    </div>
+
+                    <div class="hacker-buffer-section">
+                        <span class="hacker-label" data-i18n="hacker_buffer">INPUT BUFFER:</span>
+                        <div class="hacker-buffer" id="hackerBuffer"></div>
+                    </div>
+
+                    <div class="hacker-grid-wrapper">
+                        <div class="hacker-grid" id="hackerGrid"></div>
+                    </div>
+
+                    <div class="hacker-status-bar" id="hackerStatusMsg">
+                        <i class="fa-solid fa-terminal"></i> INITIALIZING SECURITY MATRIX...
+                    </div>
+
+                    <div class="hacker-actions">
+                        <button class="hacker-btn restart-btn" id="hackerRestartBtn">
+                            <i class="fas fa-rotate"></i>
+                            <span data-i18n="hacker_restart">RESTART PROTOCOL</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="main.js"></script>
 </body>
 
 </html>
