@@ -802,6 +802,23 @@
 
     // Modal Manager (Services & GitHub Modals)
     const ModalManager = {
+        closeAllModals() {
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.classList.remove('active');
+            });
+            if (typeof HackerGameEngine !== 'undefined' && HackerGameEngine.gameActive) {
+                HackerGameEngine.stopTimer();
+                HackerGameEngine.gameActive = false;
+            }
+        },
+
+        openModal(overlay) {
+            if (!overlay) return;
+            this.closeAllModals();
+            overlay.classList.add('active');
+            AudioFX.playClick();
+        },
+
         init() {
             this.setupModal('servicesBtn', 'servicesModalOverlay', 'closeServicesModal');
             this.setupModal('ghWidgetBtn', 'ghModalOverlay', 'closeGhModal');
@@ -815,8 +832,7 @@
             if (btn && overlay) {
                 btn.addEventListener('mouseenter', () => AudioFX.playHover());
                 btn.addEventListener('click', () => {
-                    overlay.classList.add('active');
-                    AudioFX.playClick();
+                    this.openModal(overlay);
                 });
             }
 
@@ -1213,6 +1229,9 @@
         open() {
             const overlay = document.getElementById('hackerModalOverlay');
             if (overlay) {
+                if (typeof ModalManager !== 'undefined') {
+                    ModalManager.closeAllModals();
+                }
                 overlay.classList.add('active');
                 AudioFX.playClick();
                 this.restart();
