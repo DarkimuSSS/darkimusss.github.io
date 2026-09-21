@@ -20,7 +20,72 @@
     <canvas id="fxCanvas"></canvas>
 
     <!-- Панель управления и виджет времени -->
-    <div class="top-controls">
+    <div class="top-controls-container">
+        <div class="top-controls">
+            <button id="langToggle" class="control-btn" data-tooltip-key="tooltip_lang" aria-label="Переключить язык">
+                <i class="fas fa-globe"></i>
+                <span class="btn-text" id="langLabel">RU</span>
+            </button>
+
+            <div class="theme-dropdown-wrapper" id="themeDropdownWrapper">
+                <button id="themeToggle" class="control-btn" data-tooltip-key="tooltip_theme" aria-label="Сменить тему">
+                    <i class="fas fa-palette" id="themeIcon"></i>
+                </button>
+                <div class="theme-dropdown-menu" id="themeMenu">
+                    <button class="theme-option" data-theme-val="dark">
+                        <i class="fas fa-moon"></i>
+                        <span class="theme-name">Dark</span>
+                    </button>
+                    <button class="theme-option" data-theme-val="light">
+                        <i class="fas fa-sun"></i>
+                        <span class="theme-name">Light</span>
+                    </button>
+                    <button class="theme-option" data-theme-val="emerald">
+                        <i class="fas fa-gem"></i>
+                        <span class="theme-name">Emerald</span>
+                    </button>
+                    <button class="theme-option" data-theme-val="velvet">
+                        <i class="fas fa-fire"></i>
+                        <span class="theme-name">Velvet Red</span>
+                    </button>
+                </div>
+            </div>
+
+            <button id="servicesBtn" class="control-btn" data-tooltip-key="tooltip_services" aria-label="Сервисы">
+                <i class="fa-solid fa-server"></i>
+                <span class="btn-text" data-i18n="btn_services">Сервисы</span>
+            </button>
+
+            <button id="ghWidgetBtn" class="control-btn" data-tooltip-key="tooltip_activity" aria-label="GitHub Активность">
+                <i class="fa-brands fa-github"></i>
+                <span class="btn-text" data-i18n="btn_activity">GitHub</span>
+            </button>
+
+            <button id="soundToggle" class="control-btn" data-tooltip-key="tooltip_sound" aria-label="Звуковой эффект">
+                <i class="fas fa-volume-mute" id="soundIcon"></i>
+                <span class="btn-text">SFX</span>
+            </button>
+
+            <div class="mode-selector" id="bgModeToggle">
+                <button class="mode-btn active" data-mode="grid" data-tooltip-key="tooltip_mode_grid"
+                    aria-label="Стандартный фон">
+                    <i class="fas fa-border-all"></i>
+                </button>
+                <button class="mode-btn" data-mode="matrix" data-tooltip-key="tooltip_mode_matrix"
+                    aria-label="Режим Matrix Rain">
+                    <i class="fas fa-code"></i>
+                </button>
+                <button class="mode-btn" data-mode="particles" data-tooltip-key="tooltip_mode_particles"
+                    aria-label="Режим Неоновые частицы">
+                    <i class="fas fa-atom"></i>
+                </button>
+                <button class="mode-btn" data-mode="fireflies" data-tooltip-key="tooltip_mode_fireflies"
+                    aria-label="Режим Светлячки">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                </button>
+            </div>
+        </div>
+
         <div class="system-time-widget" id="systemTimeWidget" data-tooltip-key="tooltip_time">
             <div class="time-block time-main">
                 <i class="fa-regular fa-clock time-icon"></i>
@@ -33,69 +98,6 @@
                 <i class="fa-regular fa-calendar-days date-icon"></i>
                 <span id="timeDate">21 СЕН 2026</span>
             </div>
-        </div>
-
-        <button id="langToggle" class="control-btn" data-tooltip-key="tooltip_lang" aria-label="Переключить язык">
-            <i class="fas fa-globe"></i>
-            <span class="btn-text" id="langLabel">RU</span>
-        </button>
-
-        <div class="theme-dropdown-wrapper" id="themeDropdownWrapper">
-            <button id="themeToggle" class="control-btn" data-tooltip-key="tooltip_theme" aria-label="Сменить тему">
-                <i class="fas fa-palette" id="themeIcon"></i>
-            </button>
-            <div class="theme-dropdown-menu" id="themeMenu">
-                <button class="theme-option" data-theme-val="dark">
-                    <i class="fas fa-moon"></i>
-                    <span class="theme-name">Dark</span>
-                </button>
-                <button class="theme-option" data-theme-val="light">
-                    <i class="fas fa-sun"></i>
-                    <span class="theme-name">Light</span>
-                </button>
-                <button class="theme-option" data-theme-val="emerald">
-                    <i class="fas fa-gem"></i>
-                    <span class="theme-name">Emerald</span>
-                </button>
-                <button class="theme-option" data-theme-val="velvet">
-                    <i class="fas fa-fire"></i>
-                    <span class="theme-name">Velvet Red</span>
-                </button>
-            </div>
-        </div>
-
-        <button id="servicesBtn" class="control-btn" data-tooltip-key="tooltip_services" aria-label="Сервисы">
-            <i class="fa-solid fa-server"></i>
-            <span class="btn-text" data-i18n="btn_services">Сервисы</span>
-        </button>
-
-        <button id="ghWidgetBtn" class="control-btn" data-tooltip-key="tooltip_activity" aria-label="GitHub Активность">
-            <i class="fa-brands fa-github"></i>
-            <span class="btn-text" data-i18n="btn_activity">GitHub</span>
-        </button>
-
-        <button id="soundToggle" class="control-btn" data-tooltip-key="tooltip_sound" aria-label="Звуковой эффект">
-            <i class="fas fa-volume-mute" id="soundIcon"></i>
-            <span class="btn-text">SFX</span>
-        </button>
-
-        <div class="mode-selector" id="bgModeToggle">
-            <button class="mode-btn active" data-mode="grid" data-tooltip-key="tooltip_mode_grid"
-                aria-label="Стандартный фон">
-                <i class="fas fa-border-all"></i>
-            </button>
-            <button class="mode-btn" data-mode="matrix" data-tooltip-key="tooltip_mode_matrix"
-                aria-label="Режим Matrix Rain">
-                <i class="fas fa-code"></i>
-            </button>
-            <button class="mode-btn" data-mode="particles" data-tooltip-key="tooltip_mode_particles"
-                aria-label="Режим Неоновые частицы">
-                <i class="fas fa-atom"></i>
-            </button>
-            <button class="mode-btn" data-mode="fireflies" data-tooltip-key="tooltip_mode_fireflies"
-                aria-label="Режим Светлячки">
-                <i class="fas fa-wand-magic-sparkles"></i>
-            </button>
         </div>
     </div>
 
