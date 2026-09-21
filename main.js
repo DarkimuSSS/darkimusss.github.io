@@ -1,7 +1,5 @@
 (function () {
-    // ==========================================================================
-    // 1. AudioFX Engine (Web Audio API Synthesizer)
-    // ==========================================================================
+    // Звуковые эффекты (Web Audio API)
     const AudioFX = {
         ctx: null,
         enabled: localStorage.getItem('sfx_enabled') === 'true',
@@ -134,9 +132,7 @@
         }
     };
 
-    // ==========================================================================
-    // 2. CanvasFX Engine (Matrix Rain & Particle Constellation)
-    // ==========================================================================
+    // Фоновые анимации canvas (Матрица и Неоновые частицы)
     const CanvasFX = {
         canvas: null,
         ctx: null,
@@ -360,9 +356,7 @@
         }
     };
 
-    // ==========================================================================
-    // 3. GitHub Activity & Repos Widget
-    // ==========================================================================
+    // Загрузка репозиториев и статистик с GitHub API
     const GitHubWidget = {
         username: 'DarkimuSSS',
 
@@ -479,7 +473,7 @@
     // ==========================================================================
     // 4. Page Animations & Interactions
     // ==========================================================================
-    // Typewriter Engine
+    // Анимации текста и реакция элементов
     const TypewriterEngine = {
         timerId: null,
         type(text) {
@@ -509,7 +503,7 @@
         }
     };
 
-    // Google Search Enter
+    // Быстрый поиск через Enter
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('keydown', (e) => {
@@ -523,7 +517,7 @@
         });
     }
 
-    // Parallax shapes
+    // Параллакс эффект для фигур
     const shapes = document.querySelectorAll('.shape');
     if (shapes.length) {
         document.addEventListener('mousemove', (e) => {
@@ -539,7 +533,7 @@
         });
     }
 
-    // Avatar Click effect
+    // Клик по аватарке
     const avatarImg = document.querySelector('.avatar');
     if (avatarImg) {
         avatarImg.addEventListener('click', () => {
@@ -557,9 +551,7 @@
         });
     }
 
-    // ==========================================================================
-    // Cyber System Time & Date Engine
-    // ==========================================================================
+    // Виджет часов и даты
     const TimeEngine = {
         months: {
             ru: ['ЯНВ', 'ФЕВ', 'МАР', 'АПР', 'МАЙ', 'ИЮН', 'ИЮЛ', 'АВГ', 'СЕН', 'ОКТ', 'НОЯ', 'ДЕК'],
@@ -618,7 +610,7 @@
         }
     };
 
-    // Cyber Target Reticle Cursor System with Neon Particle Trail
+    // Кастомный курсор с неоновыми искрами
     const CyberCursor = {
         dot: null,
         ring: null,
@@ -739,7 +731,7 @@
         }
     };
 
-    // Link hovers & sound FX
+    // Звуки и подсветка для ссылок
     const links = document.querySelectorAll('.link, .service-card, .quick-card');
     links.forEach(link => {
         link.addEventListener('mouseenter', () => {
@@ -758,7 +750,7 @@
         });
     });
 
-    // Favicon
+    // Фавиконка
     const favicon = document.querySelector("link[rel='icon']");
     if (!favicon) {
         const newFavicon = document.createElement('link');
@@ -767,7 +759,7 @@
         document.head.appendChild(newFavicon);
     }
 
-    // Links staggered entrance
+    // Анимация появления ссылок
     const allLinks = document.querySelectorAll('.link');
     allLinks.forEach((el, idx) => {
         el.style.opacity = '0';
@@ -779,7 +771,7 @@
         }, 100 + idx * 80);
     });
 
-    // Service cards staggered entrance
+    // Анимация появления сервисов
     const serviceCards = document.querySelectorAll('.service-card');
     serviceCards.forEach((el, idx) => {
         el.style.opacity = '0';
@@ -800,7 +792,7 @@
         }, 280);
     }
 
-    // Modal Manager (Services & GitHub Modals)
+    // Менеджер модалок
     const ModalManager = {
         closeAllModals() {
             document.querySelectorAll('.modal-overlay').forEach(overlay => {
@@ -861,9 +853,7 @@
         }
     };
 
-    // ==========================================================================
-    // 5. Theme Engine (Dark / Light Cyberpunk Glassmorphism)
-    // ==========================================================================
+    // Смена темы (Dark / Light)
     const ThemeEngine = {
         theme: 'dark',
 
@@ -909,9 +899,7 @@
         }
     };
 
-    // ==========================================================================
-    // 6. I18n Engine (Multilingual RU / EN Auto-detector)
-    // ==========================================================================
+    // Мультиязычность (RU / EN)
     const I18nEngine = {
         lang: 'ru',
 
@@ -1068,9 +1056,7 @@
         }
     };
 
-    // ==========================================================================
-    // 7. Custom Glassmorphic Tooltip Engine
-    // ==========================================================================
+    // Всплывающие тултипы
     const TooltipEngine = {
         element: null,
 
@@ -1140,9 +1126,7 @@
         }
     };
 
-    // ==========================================================================
-    // 9. Cyberpunk Netrunner Hacker Mini-Game Engine
-    // ==========================================================================
+    // Пасхалка: Мини-игра взлома терминала (Netrunner Breach Protocol)
     const HackerGameEngine = {
         level: 1,
         score: 0,
