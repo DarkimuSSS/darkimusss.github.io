@@ -86,22 +86,22 @@ body {
 }
 
 .bg-theme-layer.dark-bg {
-    background-image: url("blackbg.jpg");
+    background-image: url("images/blackbg.jpg");
     opacity: 1;
 }
 
 .bg-theme-layer.light-bg {
-    background-image: url("lightbg.jpg");
+    background-image: url("images/lightbg.jpg");
     opacity: 0;
 }
 
 .bg-theme-layer.emerald-bg {
-    background-image: url("emeraldbg.jpg");
+    background-image: url("images/emeraldbg.jpg");
     opacity: 0;
 }
 
 .bg-theme-layer.velvet-bg {
-    background-image: url("velvetbg.jpg");
+    background-image: url("images/velvetbg.jpg");
     opacity: 0;
 }
 
@@ -139,19 +139,19 @@ body {
 @media (max-width: 768px),
 (max-aspect-ratio: 1/1) {
     .bg-theme-layer.dark-bg {
-        background-image: url("blackbg_mobile.jpg");
+        background-image: url("images/blackbg_mobile.jpg");
     }
 
     .bg-theme-layer.light-bg {
-        background-image: url("lightbg_mobile.jpg");
+        background-image: url("images/lightbg_mobile.jpg");
     }
 
     .bg-theme-layer.emerald-bg {
-        background-image: url("emeraldbg_mobile.jpg");
+        background-image: url("images/emeraldbg_mobile.jpg");
     }
 
     .bg-theme-layer.velvet-bg {
-        background-image: url("velvetbg_mobile.jpg");
+        background-image: url("images/velvetbg_mobile.jpg");
     }
 }
 
@@ -661,12 +661,29 @@ body::after {
     animation: periodicQuickFlare 8s ease-in-out infinite;
 }
 
-.quick-card:nth-child(1)::before { animation-delay: 0.5s; }
-.quick-card:nth-child(2)::before { animation-delay: 1.8s; }
-.quick-card:nth-child(3)::before { animation-delay: 3.1s; }
-.quick-card:nth-child(4)::before { animation-delay: 4.4s; }
-.quick-card:nth-child(5)::before { animation-delay: 5.7s; }
-.quick-card:nth-child(6)::before { animation-delay: 7.0s; }
+.quick-card:nth-child(1)::before {
+    animation-delay: 0.5s;
+}
+
+.quick-card:nth-child(2)::before {
+    animation-delay: 1.8s;
+}
+
+.quick-card:nth-child(3)::before {
+    animation-delay: 3.1s;
+}
+
+.quick-card:nth-child(4)::before {
+    animation-delay: 4.4s;
+}
+
+.quick-card:nth-child(5)::before {
+    animation-delay: 5.7s;
+}
+
+.quick-card:nth-child(6)::before {
+    animation-delay: 7.0s;
+}
 
 @keyframes periodicQuickFlare {
 
@@ -1474,10 +1491,25 @@ body::after {
     flex-shrink: 0;
 }
 
-.theme-option i.fa-moon { color: #38bdf8; filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.5)); }
-.theme-option i.fa-sun { color: #f59e0b; filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.5)); }
-.theme-option i.fa-gem { color: #10b981; filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.5)); }
-.theme-option i.fa-fire { color: #f43f5e; filter: drop-shadow(0 0 5px rgba(244, 63, 94, 0.5)); }
+.theme-option i.fa-moon {
+    color: #38bdf8;
+    filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.5));
+}
+
+.theme-option i.fa-sun {
+    color: #f59e0b;
+    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.5));
+}
+
+.theme-option i.fa-gem {
+    color: #10b981;
+    filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.5));
+}
+
+.theme-option i.fa-fire {
+    color: #f43f5e;
+    filter: drop-shadow(0 0 5px rgba(244, 63, 94, 0.5));
+}
 
 .theme-option:hover {
     background: rgba(56, 189, 248, 0.12);
@@ -1580,6 +1612,7 @@ body::after {
     0% {
         height: 3px;
     }
+
     100% {
         height: 12px;
     }
@@ -1844,12 +1877,15 @@ body::after {
         padding: 8px 12px;
         gap: 8px;
     }
+
     .player-left {
         min-width: auto;
     }
+
     .track-info {
         display: none;
     }
+
     .volume-container {
         display: none;
     }
@@ -3120,6 +3156,7 @@ body::after {
     0% {
         text-shadow: 0 0 12px rgba(52, 211, 153, 0.6), 0 0 25px rgba(16, 185, 129, 0.4);
     }
+
     100% {
         text-shadow: 0 0 18px rgba(52, 211, 153, 0.85), 0 0 40px rgba(16, 185, 129, 0.65), 0 0 65px rgba(245, 158, 11, 0.45);
     }
@@ -3471,6 +3508,7 @@ body::after {
     0% {
         text-shadow: 0 0 12px rgba(244, 63, 94, 0.65), 0 0 25px rgba(225, 29, 72, 0.45);
     }
+
     100% {
         text-shadow: 0 0 20px rgba(244, 63, 94, 0.9), 0 0 42px rgba(225, 29, 72, 0.7), 0 0 70px rgba(251, 191, 36, 0.5);
     }
