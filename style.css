@@ -406,20 +406,19 @@ body::after {
 
 /* Cyber System Time & Date Widget in Top Controls Header */
 .system-time-widget {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
+    width: auto;
     box-sizing: border-box;
-    gap: 12px;
+    gap: 8px;
     background: rgba(9, 14, 28, 0.75);
     backdrop-filter: blur(16px);
     border: 1px solid rgba(56, 189, 248, 0.25);
-    padding: 0 0.75rem;
-    height: 30px;
-    border-radius: 9px;
+    padding: 0 0.65rem;
+    height: 28px;
+    border-radius: 8px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     font-weight: 600;
     color: var(--text-primary);
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
@@ -1225,7 +1224,7 @@ body::after {
     right: 20px;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-end;
     gap: 5px;
     z-index: 100;
 }
