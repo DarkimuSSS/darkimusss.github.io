@@ -215,6 +215,49 @@
             }
         },
 
+        getThemeColors() {
+            const theme = document.documentElement.dataset.theme || 'dark';
+            switch (theme) {
+                case 'light':
+                    return {
+                        fadeBg: 'rgba(248, 250, 252, 0.08)',
+                        lead: '#0284c7',
+                        trail: '#7c3aed',
+                        particles: ['#0284c7', '#7c3aed'],
+                        mouseStroke: (alpha) => `rgba(2, 132, 199, ${alpha})`,
+                        linkStroke: (alpha) => `rgba(124, 58, 237, ${alpha})`
+                    };
+                case 'emerald':
+                    return {
+                        fadeBg: 'rgba(3, 20, 14, 0.08)',
+                        lead: '#6ee7b7',
+                        trail: '#10b981',
+                        particles: ['#34d399', '#10b981', '#f59e0b'],
+                        mouseStroke: (alpha) => `rgba(52, 211, 153, ${alpha})`,
+                        linkStroke: (alpha) => `rgba(245, 158, 11, ${alpha})`
+                    };
+                case 'velvet':
+                    return {
+                        fadeBg: 'rgba(24, 3, 9, 0.08)',
+                        lead: '#fecdd3',
+                        trail: '#f43f5e',
+                        particles: ['#f43f5e', '#e11d48', '#fbbf24'],
+                        mouseStroke: (alpha) => `rgba(244, 63, 94, ${alpha})`,
+                        linkStroke: (alpha) => `rgba(251, 191, 36, ${alpha})`
+                    };
+                case 'dark':
+                default:
+                    return {
+                        fadeBg: 'rgba(2, 5, 14, 0.08)',
+                        lead: '#ffffff',
+                        trail: '#38bdf8',
+                        particles: ['#38bdf8', '#a855f7'],
+                        mouseStroke: (alpha) => `rgba(56, 189, 248, ${alpha})`,
+                        linkStroke: (alpha) => `rgba(168, 85, 247, ${alpha})`
+                    };
+            }
+        },
+
         initMatrix() {
             const fontSize = 16;
             const columns = Math.floor(this.canvas.width / fontSize);
@@ -238,10 +281,10 @@
             this.lastMatrixTime = timestamp;
 
             const fontSize = 16;
-            const isLight = document.documentElement.dataset.theme === 'light';
+            const colors = this.getThemeColors();
 
-            // Silky smooth trailing fade without strobing
-            this.ctx.fillStyle = isLight ? 'rgba(248, 250, 252, 0.08)' : 'rgba(2, 5, 14, 0.08)';
+            // Silky smooth trailing fade matching current theme background
+            this.ctx.fillStyle = colors.fadeBg;
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
             this.ctx.font = `${fontSize}px "JetBrains Mono", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "SimSun", sans-serif`;
@@ -252,16 +295,14 @@
                 const y = drop.y * fontSize;
 
                 if (drop.y > 0 && y < this.canvas.height + fontSize) {
-                    // Random Chinese character for lead head
                     const leadChar = this.chars[Math.floor(Math.random() * this.chars.length)];
-                    this.ctx.fillStyle = isLight ? '#0284c7' : '#ffffff';
+                    this.ctx.fillStyle = colors.lead;
                     this.ctx.fillText(leadChar, x, y);
 
-                    // Random Chinese character for trailing body
                     if (drop.y > 1) {
                         const trailChar = this.chars[Math.floor(Math.random() * this.chars.length)];
                         const prevY = (drop.y - 1) * fontSize;
-                        this.ctx.fillStyle = isLight ? '#7c3aed' : '#38bdf8';
+                        this.ctx.fillStyle = colors.trail;
                         this.ctx.fillText(trailChar, x, prevY);
                     }
                 }
@@ -284,24 +325,24 @@
             const divisor = isMobile ? 22000 : 12000;
             const maxCount = isMobile ? 32 : 70;
             const count = Math.min(Math.floor((this.canvas.width * this.canvas.height) / divisor), maxCount);
-            const isLight = document.documentElement.dataset.theme === 'light';
+            const colors = this.getThemeColors();
             this.particles = [];
             for (let i = 0; i < count; i++) {
+                const pColor = colors.particles[Math.floor(Math.random() * colors.particles.length)];
                 this.particles.push({
                     x: Math.random() * this.canvas.width,
                     y: Math.random() * this.canvas.height,
                     vx: (Math.random() - 0.5) * (isMobile ? 0.8 : 1.2),
                     vy: (Math.random() - 0.5) * (isMobile ? 0.8 : 1.2),
                     radius: Math.random() * 2 + 1,
-                    color: isLight
-                        ? (Math.random() > 0.5 ? '#0284c7' : '#7c3aed')
-                        : (Math.random() > 0.5 ? '#38bdf8' : '#a855f7')
+                    color: pColor
                 });
             }
         },
 
         renderParticles() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            const colors = this.getThemeColors();
 
             for (let i = 0; i < this.particles.length; i++) {
                 const p = this.particles[i];
@@ -327,7 +368,7 @@
                         this.ctx.beginPath();
                         this.ctx.moveTo(p.x, p.y);
                         this.ctx.lineTo(this.mouse.x, this.mouse.y);
-                        this.ctx.strokeStyle = `rgba(56, 189, 248, ${0.4 * (1 - dist / 140)})`;
+                        this.ctx.strokeStyle = colors.mouseStroke(0.4 * (1 - dist / 140));
                         this.ctx.lineWidth = 1;
                         this.ctx.stroke();
                     }
@@ -343,7 +384,7 @@
                         this.ctx.beginPath();
                         this.ctx.moveTo(p.x, p.y);
                         this.ctx.lineTo(p2.x, p2.y);
-                        this.ctx.strokeStyle = `rgba(168, 85, 247, ${0.25 * (1 - dist / 100)})`;
+                        this.ctx.strokeStyle = colors.linkStroke(0.25 * (1 - dist / 100));
                         this.ctx.lineWidth = 0.8;
                         this.ctx.stroke();
                     }
@@ -853,29 +894,83 @@
         }
     };
 
-    // Смена темы (Dark / Light)
+    // Смена темы (Селектор: Dark / Light / Emerald / Velvet)
     const ThemeEngine = {
         theme: 'dark',
+        themes: ['dark', 'light', 'emerald', 'velvet'],
 
         init() {
             const savedTheme = localStorage.getItem('user_theme');
-            if (savedTheme === 'light' || savedTheme === 'dark') {
+            if (this.themes.includes(savedTheme)) {
                 this.theme = savedTheme;
             } else {
                 const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
                 this.theme = prefersLight ? 'light' : 'dark';
             }
 
+            const wrapper = document.getElementById('themeDropdownWrapper');
             const themeBtn = document.getElementById('themeToggle');
-            if (themeBtn) {
-                themeBtn.addEventListener('click', () => {
-                    this.theme = this.theme === 'dark' ? 'light' : 'dark';
-                    localStorage.setItem('user_theme', this.theme);
-                    this.applyTheme();
+            const menu = document.getElementById('themeMenu');
+            const options = menu ? menu.querySelectorAll('.theme-option') : [];
+
+            if (themeBtn && menu) {
+                themeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = menu.classList.contains('active');
+                    if (isOpen) {
+                        this.closeMenu();
+                    } else {
+                        this.openMenu();
+                    }
                     AudioFX.playClick();
+                });
+
+                options.forEach(opt => {
+                    opt.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const selectedTheme = opt.dataset.themeVal;
+                        if (selectedTheme && this.themes.includes(selectedTheme)) {
+                            this.setTheme(selectedTheme);
+                            AudioFX.playClick();
+                        }
+                        this.closeMenu();
+                    });
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (wrapper && !wrapper.contains(e.target)) {
+                        this.closeMenu();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeMenu();
+                    }
                 });
             }
 
+            this.applyTheme();
+        },
+
+        openMenu() {
+            const wrapper = document.getElementById('themeDropdownWrapper');
+            const menu = document.getElementById('themeMenu');
+            if (wrapper) wrapper.classList.add('active');
+            if (menu) menu.classList.add('active');
+        },
+
+        closeMenu() {
+            const wrapper = document.getElementById('themeDropdownWrapper');
+            const menu = document.getElementById('themeMenu');
+            if (wrapper) wrapper.classList.remove('active');
+            if (menu) menu.classList.remove('active');
+        },
+
+        setTheme(newTheme) {
+            if (!this.themes.includes(newTheme)) return;
+            this.theme = newTheme;
+            localStorage.setItem('user_theme', this.theme);
             this.applyTheme();
         },
 
@@ -884,13 +979,32 @@
 
             const icon = document.getElementById('themeIcon');
             const label = document.getElementById('themeLabel');
+            const menu = document.getElementById('themeMenu');
 
             if (this.theme === 'light') {
                 if (icon) icon.className = 'fas fa-sun';
                 if (label) label.textContent = 'LIGHT';
+            } else if (this.theme === 'emerald') {
+                if (icon) icon.className = 'fas fa-gem';
+                if (label) label.textContent = 'EMERALD';
+            } else if (this.theme === 'velvet') {
+                if (icon) icon.className = 'fas fa-fire';
+                if (label) label.textContent = 'VELVET';
             } else {
                 if (icon) icon.className = 'fas fa-moon';
                 if (label) label.textContent = 'DARK';
+            }
+
+            // Update active item in dropdown
+            if (menu) {
+                const options = menu.querySelectorAll('.theme-option');
+                options.forEach(opt => {
+                    if (opt.dataset.themeVal === this.theme) {
+                        opt.classList.add('active');
+                    } else {
+                        opt.classList.remove('active');
+                    }
+                });
             }
 
             if (typeof CanvasFX !== 'undefined' && CanvasFX.canvas) {

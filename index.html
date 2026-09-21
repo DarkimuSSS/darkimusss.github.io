@@ -15,6 +15,8 @@
 <body>
     <div class="bg-theme-layer dark-bg"></div>
     <div class="bg-theme-layer light-bg"></div>
+    <div class="bg-theme-layer emerald-bg"></div>
+    <div class="bg-theme-layer velvet-bg"></div>
     <canvas id="fxCanvas"></canvas>
 
     <!-- Панель управления и виджет времени -->
@@ -38,10 +40,29 @@
             <span class="btn-text" id="langLabel">RU</span>
         </button>
 
-        <button id="themeToggle" class="control-btn" data-tooltip-key="tooltip_theme" aria-label="Сменить тему">
-            <i class="fas fa-sun" id="themeIcon"></i>
-            <span class="btn-text" id="themeLabel">THEME</span>
-        </button>
+        <div class="theme-dropdown-wrapper" id="themeDropdownWrapper">
+            <button id="themeToggle" class="control-btn" data-tooltip-key="tooltip_theme" aria-label="Сменить тему">
+                <i class="fas fa-palette" id="themeIcon"></i>
+            </button>
+            <div class="theme-dropdown-menu" id="themeMenu">
+                <button class="theme-option" data-theme-val="dark">
+                    <i class="fas fa-moon"></i>
+                    <span class="theme-name">Dark</span>
+                </button>
+                <button class="theme-option" data-theme-val="light">
+                    <i class="fas fa-sun"></i>
+                    <span class="theme-name">Light</span>
+                </button>
+                <button class="theme-option" data-theme-val="emerald">
+                    <i class="fas fa-gem"></i>
+                    <span class="theme-name">Emerald</span>
+                </button>
+                <button class="theme-option" data-theme-val="velvet">
+                    <i class="fas fa-fire"></i>
+                    <span class="theme-name">Velvet Red</span>
+                </button>
+            </div>
+        </div>
 
         <button id="servicesBtn" class="control-btn" data-tooltip-key="tooltip_services" aria-label="Сервисы">
             <i class="fa-solid fa-server"></i>
