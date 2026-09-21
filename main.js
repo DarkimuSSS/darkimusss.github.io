@@ -1416,6 +1416,46 @@
         }
     };
 
+    // Блокировка контекстного меню (ПКМ) и клавиш отладки (F12, Ctrl+Shift+I, Ctrl+U)
+    const SecurityLock = {
+        init() {
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                AudioFX.playClick();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                const isCtrlKey = e.ctrlKey || e.metaKey;
+
+                if (e.key === 'F12' || e.code === 'F12') {
+                    e.preventDefault();
+                    AudioFX.playClick();
+                    return;
+                }
+
+                if (isCtrlKey && e.shiftKey) {
+                    const key = e.key ? e.key.toLowerCase() : '';
+                    const code = e.code;
+                    if (code === 'KeyI' || code === 'KeyJ' || code === 'KeyC' || ['i', 'j', 'c', 'ш', 'о', 'с'].includes(key)) {
+                        e.preventDefault();
+                        AudioFX.playClick();
+                        return;
+                    }
+                }
+
+                if (isCtrlKey && !e.shiftKey) {
+                    const key = e.key ? e.key.toLowerCase() : '';
+                    const code = e.code;
+                    if (code === 'KeyU' || code === 'KeyS' || ['u', 's', 'г', 'ы'].includes(key)) {
+                        e.preventDefault();
+                        AudioFX.playClick();
+                        return;
+                    }
+                }
+            }, true);
+        }
+    };
+
     // Initialize modules
     ThemeEngine.init();
     I18nEngine.init();
@@ -1427,4 +1467,5 @@
     CyberCursor.init();
     TooltipEngine.init();
     HackerGameEngine.init();
+    SecurityLock.init();
 })();
