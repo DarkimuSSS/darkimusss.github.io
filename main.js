@@ -1957,7 +1957,14 @@
                 }
             } catch (e) {}
 
-            this.loadCurrentTrack(false);
+            // Восстановление сохраненного индекса и времени трека
+            const savedIndex = parseInt(localStorage.getItem('bgm_track_index') || '0');
+            if (savedIndex >= 0 && savedIndex < this.playlist.length) {
+                this.currentIndex = savedIndex;
+            }
+
+            const savedTime = parseFloat(localStorage.getItem('bgm_track_time') || '0');
+            this.loadCurrentTrack(false, savedTime);
         },
 
         parseTrackFromFilename(pathOrName) {
@@ -1983,12 +1990,27 @@
             };
         },
 
-        loadCurrentTrack(autoPlay = true) {
+        loadCurrentTrack(autoPlay = true, resumeTime = 0) {
             if (!this.playlist || this.playlist.length === 0) return;
             const track = this.playlist[this.currentIndex];
-            if (this.audio.src !== location.origin + '/' + track.src && !this.audio.src.endsWith(track.src)) {
+            localStorage.setItem('bgm_track_index', this.currentIndex);
+
+            const decodedSrc = decodeURI(track.src);
+            if (!this.audio.src.endsWith(track.src) && !this.audio.src.endsWith(decodedSrc)) {
                 this.audio.src = track.src;
+                if (resumeTime > 0) {
+                    const onMetadata = () => {
+                        if (resumeTime < this.audio.duration) {
+                            this.audio.currentTime = resumeTime;
+                        }
+                        this.audio.removeEventListener('loadedmetadata', onMetadata);
+                    };
+                    this.audio.addEventListener('loadedmetadata', onMetadata);
+                }
+            } else if (resumeTime > 0) {
+                this.audio.currentTime = resumeTime;
             }
+
             this.updateTrackInfo();
             if (autoPlay) {
                 this.play();
@@ -2030,6 +2052,7 @@
         },
 
         nextTrack() {
+            localStorage.setItem('bgm_track_time', '0');
             if (this.isShuffle) {
                 let nextIdx = Math.floor(Math.random() * this.playlist.length);
                 if (nextIdx === this.currentIndex && this.playlist.length > 1) {
@@ -2039,12 +2062,13 @@
             } else {
                 this.currentIndex = (this.currentIndex + 1) % this.playlist.length;
             }
-            this.loadCurrentTrack(true);
+            this.loadCurrentTrack(true, 0);
         },
 
         prevTrack() {
+            localStorage.setItem('bgm_track_time', '0');
             this.currentIndex = (this.currentIndex - 1 + this.playlist.length) % this.playlist.length;
-            this.loadCurrentTrack(true);
+            this.loadCurrentTrack(true, 0);
         },
 
         setVolume(val) {
@@ -2065,6 +2089,11 @@
             const currTimeEl = document.getElementById('currTime');
             const durTimeEl = document.getElementById('durTime');
             const progressFill = document.getElementById('progressFill');
+
+            // Сохранение текущей секунды воспроизведения в памяти
+            if (curr > 0) {
+                localStorage.setItem('bgm_track_time', curr.toFixed(1));
+            }
 
             if (currTimeEl) currTimeEl.textContent = this.formatTime(curr);
             if (durTimeEl) durTimeEl.textContent = this.formatTime(dur);
