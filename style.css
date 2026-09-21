@@ -1232,7 +1232,7 @@ body::after {
 .top-controls {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
 }
 
 .control-btn {
@@ -1240,12 +1240,12 @@ body::after {
     backdrop-filter: blur(16px);
     border: 1px solid rgba(56, 189, 248, 0.25);
     color: var(--accent-cyan);
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     padding: 0;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.92rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1351,13 +1351,13 @@ body::after {
 .mode-selector {
     display: flex;
     align-items: center;
-    height: 38px;
+    height: 34px;
     background: rgba(6, 11, 24, 0.75);
     backdrop-filter: blur(16px);
-    padding: 3px;
-    border-radius: 12px;
+    padding: 2px;
+    border-radius: 10px;
     border: 1px solid rgba(56, 189, 248, 0.25);
-    gap: 3px;
+    gap: 2px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -1365,15 +1365,15 @@ body::after {
     background: transparent;
     border: 1px solid transparent;
     padding: 0;
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: none;
-    border-radius: 9px;
+    border-radius: 8px;
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.84rem;
     cursor: pointer;
     transition: all 0.2s ease;
 }
