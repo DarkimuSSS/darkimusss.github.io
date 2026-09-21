@@ -1766,24 +1766,22 @@
         }
     };
 
-    // Фоновый музыкальный плеер (YouTube IFrame Player API)
+    // Фоновый музыкальный плеер (HTML5 Audio с автопоиском треков)
     const BGMusic = {
         playlist: [
-            { id: 'iRuKU5wOIa8', title: 'Cyberpunk Ambient', artist: 'YouTube Stream' },
-            { id: '5qap5aO4i9A', title: 'Lofi Hip Hop Radio', artist: 'Lofi Girl' },
-            { id: '4xDzrJKXOOY', title: 'Synthwave Beats', artist: 'ChillSynth' },
-            { id: 'jfKfPfyJRdk', title: 'Relaxing Ambient', artist: 'Chillhop' }
+            { src: 'music/na-obratnojj-storone-zemli.mp3', title: 'На обратной стороне земли', artist: 'darkimusss' },
+            { src: 'music/sotni-gortenzij.mp3', title: 'Сотни гортензий', artist: 'darkimusss' },
+            { src: 'music/za-kraj.mp3', title: 'За край', artist: 'darkimusss' },
+            { src: 'music/dojd.mp3', title: 'Дождь', artist: 'darkimusss' }
         ],
         currentIndex: 0,
-        player: null,
-        isReady: false,
+        audio: new Audio(),
         isPlaying: false,
         isShuffle: false,
         isRepeat: false,
         enabled: localStorage.getItem('bgm_enabled') !== 'false',
         volume: parseInt(localStorage.getItem('bgm_volume') || '45'),
         hasInteracted: false,
-        progressTimer: null,
 
         init() {
             const musicBtn = document.getElementById('musicToggle');
@@ -1797,7 +1795,38 @@
             const volSlider = document.getElementById('volSlider');
             const progressBarWrapper = document.getElementById('progressBarWrapper');
 
-            // Установка сохраненной громкости
+            // Настройка звука
+            this.audio.volume = this.volume / 100;
+            this.audio.preload = 'metadata';
+
+            // Настройка событий HTML5 Audio
+            this.audio.addEventListener('timeupdate', () => {
+                this.updateProgress();
+            });
+
+            this.audio.addEventListener('ended', () => {
+                if (this.isRepeat) {
+                    this.play();
+                } else {
+                    this.nextTrack();
+                }
+            });
+
+            this.audio.addEventListener('play', () => {
+                this.isPlaying = true;
+                this.enabled = true;
+                localStorage.setItem('bgm_enabled', 'true');
+                this.updateUI();
+            });
+
+            this.audio.addEventListener('pause', () => {
+                this.isPlaying = false;
+                this.updateUI();
+            });
+
+            // Динамический автопоиск треков из папки music/
+            this.loadPlaylist();
+
             if (volSlider) {
                 volSlider.value = this.volume;
                 volSlider.addEventListener('input', (e) => {
@@ -1805,7 +1834,6 @@
                 });
             }
 
-            // Кнопка в шапке открывает/закрывает панель
             if (musicBtn) {
                 musicBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1819,14 +1847,12 @@
                 });
             }
 
-            // Закрытие/сворачивание панели плеера
             if (btnClose) {
                 btnClose.addEventListener('click', () => {
                     this.hideDock();
                 });
             }
 
-            // Управление воспроизведением в панели
             if (btnPlayPause) {
                 btnPlayPause.addEventListener('click', () => {
                     this.hasInteracted = true;
@@ -1836,12 +1862,14 @@
 
             if (btnNext) {
                 btnNext.addEventListener('click', () => {
+                    this.hasInteracted = true;
                     this.nextTrack();
                 });
             }
 
             if (btnPrev) {
                 btnPrev.addEventListener('click', () => {
+                    this.hasInteracted = true;
                     this.prevTrack();
                 });
             }
@@ -1860,34 +1888,24 @@
                 });
             }
 
-            // Клик по прогресс-бару для перемотки
             if (progressBarWrapper) {
                 progressBarWrapper.addEventListener('click', (e) => {
-                    if (!this.player || !this.isReady) return;
+                    if (!this.audio.duration) return;
                     const rect = progressBarWrapper.getBoundingClientRect();
                     const clickX = e.clientX - rect.left;
                     const pct = Math.max(0, Math.min(1, clickX / rect.width));
-                    const dur = this.player.getDuration() || 0;
-                    if (dur > 0) {
-                        this.player.seekTo(pct * dur, true);
-                    }
+                    this.audio.currentTime = pct * this.audio.duration;
                 });
             }
 
-            // Подключение YouTube IFrame API
-            this.loadYouTubeAPI();
-            this.updateTrackInfo();
-
-            // Восстановление состояния открытости панели
             if (localStorage.getItem('bgm_dock_open') === 'true') {
                 this.showDock();
             }
 
-            // Автовоспроизведение при первом клике на странице
             const onFirstInteraction = () => {
                 if (!this.hasInteracted) {
                     this.hasInteracted = true;
-                    if (this.enabled && this.isReady && !this.isPlaying) {
+                    if (this.enabled && !this.isPlaying) {
                         this.play();
                     }
                 }
@@ -1899,82 +1917,104 @@
             window.addEventListener('keydown', onFirstInteraction, { once: true });
         },
 
-        loadYouTubeAPI() {
-            if (!window.YT) {
-                const tag = document.createElement('script');
-                tag.src = 'https://www.youtube.com/iframe_api';
-                const firstScript = document.getElementsByTagName('script')[0];
-                firstScript.parentNode.insertBefore(tag, firstScript);
-            }
-
-            const initPlayer = () => {
-                const currTrack = this.playlist[this.currentIndex];
-                this.player = new YT.Player('ytMusicPlayerContainer', {
-                    height: '1',
-                    width: '1',
-                    videoId: currTrack.id,
-                    playerVars: {
-                        autoplay: 0,
-                        controls: 0,
-                        loop: 0,
-                        enablejsapi: 1,
-                        origin: window.location.origin
-                    },
-                    events: {
-                        onReady: () => {
-                            this.isReady = true;
-                            this.setVolume(this.volume);
-                            if (this.hasInteracted && this.enabled) {
-                                this.play();
+        async loadPlaylist() {
+            // Способ 1: Чтение манифеста playlist.json в папке music/
+            try {
+                const res = await fetch('music/playlist.json');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        this.playlist = data.map(item => {
+                            if (typeof item === 'string') {
+                                return this.parseTrackFromFilename(item);
                             }
-                        },
-                        onStateChange: (e) => {
-                            // YT.PlayerState: PLAYING = 1, PAUSED = 2, ENDED = 0
-                            if (e.data === 1) {
-                                this.isPlaying = true;
-                                this.enabled = true;
-                                localStorage.setItem('bgm_enabled', 'true');
-                                this.startProgressTimer();
-                                this.updateUI();
-                            } else if (e.data === 2) {
-                                this.isPlaying = false;
-                                this.stopProgressTimer();
-                                this.updateUI();
-                            } else if (e.data === 0) {
-                                this.isPlaying = false;
-                                this.stopProgressTimer();
-                                if (this.isRepeat) {
-                                    this.play();
-                                } else {
-                                    this.nextTrack();
-                                }
-                            }
-                        }
+                            return item;
+                        });
                     }
-                });
+                }
+            } catch (e) {}
+
+            // Способ 2: Сканирование индекса директории music/ (для локальных/серверных списков)
+            try {
+                const res = await fetch('music/');
+                if (res.ok) {
+                    const html = await res.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const mp3Links = Array.from(doc.querySelectorAll('a[href$=".mp3"]'));
+                    if (mp3Links.length > 0) {
+                        const scanned = mp3Links.map(a => {
+                            const href = a.getAttribute('href');
+                            return this.parseTrackFromFilename(href);
+                        });
+                        const existingPaths = new Set(this.playlist.map(t => t.src));
+                        scanned.forEach(track => {
+                            if (!existingPaths.has(track.src)) {
+                                this.playlist.push(track);
+                            }
+                        });
+                    }
+                }
+            } catch (e) {}
+
+            this.loadCurrentTrack(false);
+        },
+
+        parseTrackFromFilename(pathOrName) {
+            const fileName = pathOrName.split('/').pop().split('?')[0];
+            const nameWithoutExt = decodeURIComponent(fileName.replace(/\.[^/.]+$/, ''));
+            const cleanName = nameWithoutExt.replace(/[-_]+/g, ' ').trim();
+
+            const translitMap = {
+                'dojd': 'Дождь',
+                'na obratnojj storone zemli': 'На обратной стороне земли',
+                'sotni gortenzij': 'Сотни гортензий',
+                'za kraj': 'За край'
             };
 
-            if (window.YT && window.YT.Player) {
-                initPlayer();
-            } else {
-                window.onYouTubeIframeAPIReady = initPlayer;
+            const lower = cleanName.toLowerCase();
+            const prettyTitle = translitMap[lower] || (cleanName.charAt(0).toUpperCase() + cleanName.slice(1));
+            const fullSrc = pathOrName.startsWith('music/') ? pathOrName : `music/${fileName}`;
+
+            return {
+                src: fullSrc,
+                title: prettyTitle,
+                artist: 'darkimusss'
+            };
+        },
+
+        loadCurrentTrack(autoPlay = true) {
+            if (!this.playlist || this.playlist.length === 0) return;
+            const track = this.playlist[this.currentIndex];
+            if (this.audio.src !== location.origin + '/' + track.src && !this.audio.src.endsWith(track.src)) {
+                this.audio.src = track.src;
+            }
+            this.updateTrackInfo();
+            if (autoPlay) {
+                this.play();
             }
         },
 
+        updateTrackInfo() {
+            if (!this.playlist || this.playlist.length === 0) return;
+            const track = this.playlist[this.currentIndex];
+            const titleEl = document.getElementById('trackTitle');
+            const artistEl = document.getElementById('trackArtist');
+            if (titleEl) titleEl.textContent = track.title;
+            if (artistEl) artistEl.textContent = track.artist;
+        },
+
         play() {
-            if (this.player && typeof this.player.playVideo === 'function') {
-                try {
-                    this.player.playVideo();
-                } catch (err) {}
+            const playPromise = this.audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch((err) => {
+                    console.log('Autoplay deferred until user action');
+                });
             }
         },
 
         pause() {
-            if (this.player && typeof this.player.pauseVideo === 'function') {
-                try {
-                    this.player.pauseVideo();
-                } catch (err) {}
-            }
+            this.audio.pause();
         },
 
         togglePlay() {
@@ -1999,41 +2039,38 @@
             } else {
                 this.currentIndex = (this.currentIndex + 1) % this.playlist.length;
             }
-            this.loadCurrentTrack();
+            this.loadCurrentTrack(true);
         },
 
         prevTrack() {
             this.currentIndex = (this.currentIndex - 1 + this.playlist.length) % this.playlist.length;
-            this.loadCurrentTrack();
-        },
-
-        loadCurrentTrack() {
-            const track = this.playlist[this.currentIndex];
-            this.updateTrackInfo();
-            if (this.player && typeof this.player.loadVideoById === 'function') {
-                this.player.loadVideoById(track.id);
-            }
-        },
-
-        updateTrackInfo() {
-            const track = this.playlist[this.currentIndex];
-            const titleEl = document.getElementById('trackTitle');
-            const artistEl = document.getElementById('trackArtist');
-            if (titleEl) titleEl.textContent = track.title;
-            if (artistEl) artistEl.textContent = track.artist;
+            this.loadCurrentTrack(true);
         },
 
         setVolume(val) {
             this.volume = val;
             localStorage.setItem('bgm_volume', val);
-            if (this.player && typeof this.player.setVolume === 'function') {
-                this.player.setVolume(val);
-            }
+            this.audio.volume = val / 100;
             const volIcon = document.getElementById('volIcon');
             if (volIcon) {
                 if (val === 0) volIcon.className = 'fas fa-volume-xmark';
                 else if (val < 50) volIcon.className = 'fas fa-volume-low';
                 else volIcon.className = 'fas fa-volume-high';
+            }
+        },
+
+        updateProgress() {
+            const curr = this.audio.currentTime || 0;
+            const dur = this.audio.duration || 0;
+            const currTimeEl = document.getElementById('currTime');
+            const durTimeEl = document.getElementById('durTime');
+            const progressFill = document.getElementById('progressFill');
+
+            if (currTimeEl) currTimeEl.textContent = this.formatTime(curr);
+            if (durTimeEl) durTimeEl.textContent = this.formatTime(dur);
+            if (progressFill && dur > 0) {
+                const pct = (curr / dur) * 100;
+                progressFill.style.width = `${pct}%`;
             }
         },
 
@@ -2047,32 +2084,6 @@
             const dock = document.getElementById('musicPlayerDock');
             if (dock) dock.classList.add('hidden');
             localStorage.setItem('bgm_dock_open', 'false');
-        },
-
-        startProgressTimer() {
-            this.stopProgressTimer();
-            this.progressTimer = setInterval(() => {
-                if (!this.player || !this.isPlaying || typeof this.player.getCurrentTime !== 'function') return;
-                const curr = this.player.getCurrentTime() || 0;
-                const dur = this.player.getDuration() || 0;
-                const currTimeEl = document.getElementById('currTime');
-                const durTimeEl = document.getElementById('durTime');
-                const progressFill = document.getElementById('progressFill');
-
-                if (currTimeEl) currTimeEl.textContent = this.formatTime(curr);
-                if (durTimeEl) durTimeEl.textContent = this.formatTime(dur);
-                if (progressFill && dur > 0) {
-                    const pct = (curr / dur) * 100;
-                    progressFill.style.width = `${pct}%`;
-                }
-            }, 500);
-        },
-
-        stopProgressTimer() {
-            if (this.progressTimer) {
-                clearInterval(this.progressTimer);
-                this.progressTimer = null;
-            }
         },
 
         formatTime(sec) {
