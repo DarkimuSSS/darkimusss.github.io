@@ -521,8 +521,9 @@ body::after {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: var(--card-bg);
-    backdrop-filter: blur(16px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(0, 0, 0, 0.25) 100%), var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     padding: 0.7rem 1.4rem;
     border-radius: 14px;
     text-decoration: none;
@@ -538,8 +539,22 @@ body::after {
     overflow: hidden;
     z-index: 2;
     letter-spacing: 0.5px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), inset 0 -1px 2px rgba(0, 0, 0, 0.4), 0 8px 25px rgba(0, 0, 0, 0.4);
     white-space: nowrap;
+}
+
+/* Glass Mirror Gloss Overlay */
+.quick-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border-radius: 14px 14px 0 0;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .quick-card:nth-child(1) {
@@ -562,6 +577,10 @@ body::after {
     animation: fadeInLeft 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s both;
 }
 
+.quick-card:nth-child(6) {
+    animation: fadeInLeft 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s both;
+}
+
 @keyframes fadeInLeft {
     0% {
         opacity: 0;
@@ -574,22 +593,45 @@ body::after {
     }
 }
 
+/* Periodic Shimmering Light Flare Sweep */
 .quick-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: -130%;
-    width: 70%;
+    width: 65%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.65), transparent);
     transform: skewX(-25deg);
     pointer-events: none;
     z-index: 3;
+    animation: periodicQuickFlare 8s ease-in-out infinite;
+}
+
+.quick-card:nth-child(1)::before { animation-delay: 0.5s; }
+.quick-card:nth-child(2)::before { animation-delay: 1.8s; }
+.quick-card:nth-child(3)::before { animation-delay: 3.1s; }
+.quick-card:nth-child(4)::before { animation-delay: 4.4s; }
+.quick-card:nth-child(5)::before { animation-delay: 5.7s; }
+.quick-card:nth-child(6)::before { animation-delay: 7.0s; }
+
+@keyframes periodicQuickFlare {
+
+    0%,
+    75%,
+    100% {
+        left: -130%;
+    }
+
+    88% {
+        left: 170%;
+    }
 }
 
 .quick-card:hover::before {
+    animation: none;
     left: 170%;
-    transition: left 0.6s ease;
+    transition: left 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .quick-card .card-icon {
