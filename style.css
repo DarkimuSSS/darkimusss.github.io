@@ -1745,7 +1745,9 @@ body::after {
 
 .player-btn.active {
     color: var(--accent-cyan);
-    text-shadow: 0 0 8px var(--glow-cyan);
+    background: rgba(56, 189, 248, 0.2);
+    box-shadow: 0 0 12px var(--glow-cyan);
+    border: 1px solid rgba(56, 189, 248, 0.4);
 }
 
 .play-main-btn {

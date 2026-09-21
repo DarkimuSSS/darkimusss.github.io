@@ -1777,8 +1777,8 @@
         currentIndex: 0,
         audio: new Audio(),
         isPlaying: false,
-        isShuffle: false,
-        isRepeat: false,
+        isShuffle: localStorage.getItem('bgm_shuffle') === 'true',
+        isRepeat: localStorage.getItem('bgm_repeat') === 'true',
         enabled: localStorage.getItem('bgm_enabled') !== 'false',
         volume: parseInt(localStorage.getItem('bgm_volume') || '45'),
         hasInteracted: false,
@@ -1794,6 +1794,14 @@
             const btnRepeat = document.getElementById('btnRepeat');
             const volSlider = document.getElementById('volSlider');
             const progressBarWrapper = document.getElementById('progressBarWrapper');
+
+            // Установка состояния кнопок Shuffle / Repeat
+            if (btnShuffle) {
+                btnShuffle.classList.toggle('active', this.isShuffle);
+            }
+            if (btnRepeat) {
+                btnRepeat.classList.toggle('active', this.isRepeat);
+            }
 
             // Настройка звука
             this.audio.volume = this.volume / 100;
@@ -1877,6 +1885,7 @@
             if (btnShuffle) {
                 btnShuffle.addEventListener('click', () => {
                     this.isShuffle = !this.isShuffle;
+                    localStorage.setItem('bgm_shuffle', this.isShuffle);
                     btnShuffle.classList.toggle('active', this.isShuffle);
                 });
             }
@@ -1884,6 +1893,7 @@
             if (btnRepeat) {
                 btnRepeat.addEventListener('click', () => {
                     this.isRepeat = !this.isRepeat;
+                    localStorage.setItem('bgm_repeat', this.isRepeat);
                     btnRepeat.classList.toggle('active', this.isRepeat);
                 });
             }
