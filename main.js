@@ -211,6 +211,9 @@
                 } else if (newMode === 'particles') {
                     this.initParticles();
                     this.renderParticles();
+                } else if (newMode === 'fireflies') {
+                    this.initFireflies();
+                    this.renderFireflies();
                 }
             }
         },
@@ -224,6 +227,7 @@
                         lead: '#0284c7',
                         trail: '#7c3aed',
                         particles: ['#0284c7', '#7c3aed'],
+                        fireflies: ['rgba(2, 132, 199, ', 'rgba(124, 58, 237, ', 'rgba(14, 165, 233, '],
                         mouseStroke: (alpha) => `rgba(2, 132, 199, ${alpha})`,
                         linkStroke: (alpha) => `rgba(124, 58, 237, ${alpha})`
                     };
@@ -233,6 +237,7 @@
                         lead: '#6ee7b7',
                         trail: '#10b981',
                         particles: ['#34d399', '#10b981', '#f59e0b'],
+                        fireflies: ['rgba(52, 211, 153, ', 'rgba(16, 185, 129, ', 'rgba(245, 158, 11, '],
                         mouseStroke: (alpha) => `rgba(52, 211, 153, ${alpha})`,
                         linkStroke: (alpha) => `rgba(245, 158, 11, ${alpha})`
                     };
@@ -242,6 +247,7 @@
                         lead: '#fecdd3',
                         trail: '#f43f5e',
                         particles: ['#f43f5e', '#e11d48', '#fbbf24'],
+                        fireflies: ['rgba(244, 63, 94, ', 'rgba(225, 29, 72, ', 'rgba(251, 191, 36, '],
                         mouseStroke: (alpha) => `rgba(244, 63, 94, ${alpha})`,
                         linkStroke: (alpha) => `rgba(251, 191, 36, ${alpha})`
                     };
@@ -252,6 +258,7 @@
                         lead: '#ffffff',
                         trail: '#38bdf8',
                         particles: ['#38bdf8', '#a855f7'],
+                        fireflies: ['rgba(56, 189, 248, ', 'rgba(168, 85, 247, ', 'rgba(99, 102, 241, '],
                         mouseStroke: (alpha) => `rgba(56, 189, 248, ${alpha})`,
                         linkStroke: (alpha) => `rgba(168, 85, 247, ${alpha})`
                     };
@@ -261,11 +268,17 @@
         initMatrix() {
             const fontSize = 16;
             const columns = Math.floor(this.canvas.width / fontSize);
+            const trailLength = 12;
             this.matrixDrops = [];
             for (let i = 0; i < columns; i++) {
+                const chars = [];
+                for (let c = 0; c < trailLength; c++) {
+                    chars.push(this.chars[Math.floor(Math.random() * this.chars.length)]);
+                }
                 this.matrixDrops[i] = {
                     y: Math.floor(Math.random() * -40),
-                    speed: Math.floor(Math.random() * 2) + 1
+                    speed: Math.floor(Math.random() * 2) + 1,
+                    chars: chars
                 };
             }
         },
@@ -281,36 +294,60 @@
             this.lastMatrixTime = timestamp;
 
             const fontSize = 16;
+            const trailLength = 12;
             const colors = this.getThemeColors();
 
-            // Silky smooth trailing fade matching current theme background
-            this.ctx.fillStyle = colors.fadeBg;
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
+            // Clear canvas completely so underlying wallpaper image remains 100% visible
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.ctx.font = `${fontSize}px "JetBrains Mono", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "SimSun", sans-serif`;
 
             for (let i = 0; i < this.matrixDrops.length; i++) {
                 const drop = this.matrixDrops[i];
                 const x = i * fontSize;
-                const y = drop.y * fontSize;
 
-                if (drop.y > 0 && y < this.canvas.height + fontSize) {
-                    const leadChar = this.chars[Math.floor(Math.random() * this.chars.length)];
-                    this.ctx.fillStyle = colors.lead;
-                    this.ctx.fillText(leadChar, x, y);
-
-                    if (drop.y > 1) {
-                        const trailChar = this.chars[Math.floor(Math.random() * this.chars.length)];
-                        const prevY = (drop.y - 1) * fontSize;
-                        this.ctx.fillStyle = colors.trail;
-                        this.ctx.fillText(trailChar, x, prevY);
+                if (!drop.chars || drop.chars.length < trailLength) {
+                    drop.chars = [];
+                    for (let c = 0; c < trailLength; c++) {
+                        drop.chars.push(this.chars[Math.floor(Math.random() * this.chars.length)]);
                     }
                 }
 
+                // Randomly mutate trailing characters for dynamic Matrix flicker
+                if (Math.random() < 0.12) {
+                    const mutateIdx = Math.floor(Math.random() * trailLength);
+                    drop.chars[mutateIdx] = this.chars[Math.floor(Math.random() * this.chars.length)];
+                }
+
+                for (let t = 0; t < trailLength; t++) {
+                    const charRow = drop.y - t;
+                    const y = charRow * fontSize;
+
+                    if (charRow > 0 && y < this.canvas.height + fontSize) {
+                        const char = drop.chars[t] || this.chars[0];
+                        const alpha = (1 - t / trailLength) * 0.95;
+
+                        if (t === 0) {
+                            // Bright lead character with glow
+                            this.ctx.fillStyle = colors.lead;
+                            this.ctx.shadowColor = colors.lead;
+                            this.ctx.shadowBlur = 8;
+                            this.ctx.globalAlpha = 1;
+                            this.ctx.fillText(char, x, y);
+                            this.ctx.shadowBlur = 0;
+                        } else {
+                            // Trailing characters fading out smoothly
+                            this.ctx.fillStyle = colors.trail;
+                            this.ctx.globalAlpha = alpha;
+                            this.ctx.fillText(char, x, y);
+                        }
+                    }
+                }
+
+                this.ctx.globalAlpha = 1;
                 drop.y += drop.speed;
 
-                if (y > this.canvas.height && Math.random() > 0.975) {
-                    drop.y = Math.floor(Math.random() * -20);
+                if ((drop.y - trailLength) * fontSize > this.canvas.height && Math.random() > 0.975) {
+                    drop.y = Math.floor(Math.random() * -15);
                     drop.speed = Math.floor(Math.random() * 2) + 1;
                 }
             }
@@ -393,6 +430,151 @@
 
             if (this.mode === 'particles') {
                 this.animationFrame = requestAnimationFrame(() => this.renderParticles());
+            }
+        },
+
+        initFireflies() {
+            const isMobile = window.innerWidth < 600;
+            const count = isMobile ? 35 : 75;
+            this.fireflies = [];
+            this.sparks = [];
+
+            for (let i = 0; i < count; i++) {
+                this.fireflies.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    baseRadius: Math.random() * 2.5 + 1.2,
+                    vx: (Math.random() - 0.5) * 0.45,
+                    vy: (Math.random() - 0.5) * 0.45,
+                    pulse: Math.random() * Math.PI * 2,
+                    pulseSpeed: Math.random() * 0.03 + 0.01,
+                    colorIdx: Math.floor(Math.random() * 3)
+                });
+            }
+
+            this.lastMouse = { x: null, y: null };
+        },
+
+        renderFireflies() {
+            if (this.mode !== 'fireflies') return;
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            const colors = this.getThemeColors();
+            const w = this.canvas.width;
+            const h = this.canvas.height;
+
+            // 1. Spawn micro spark trail when mouse moves
+            if (this.mouse.x !== null && this.mouse.y !== null) {
+                if (this.lastMouse.x !== null) {
+                    const distMoved = Math.hypot(this.mouse.x - this.lastMouse.x, this.mouse.y - this.lastMouse.y);
+                    if (distMoved > 4 && this.sparks.length < 80) {
+                        this.sparks.push({
+                            x: this.mouse.x + (Math.random() - 0.5) * 12,
+                            y: this.mouse.y + (Math.random() - 0.5) * 12,
+                            vx: (Math.random() - 0.5) * 0.8,
+                            vy: (Math.random() - 0.5) * 0.8 - 0.3,
+                            life: 1.0,
+                            decay: Math.random() * 0.025 + 0.015,
+                            radius: Math.random() * 1.8 + 0.6,
+                            colorIdx: Math.floor(Math.random() * 3)
+                        });
+                    }
+                }
+                this.lastMouse.x = this.mouse.x;
+                this.lastMouse.y = this.mouse.y;
+            }
+
+            // 2. Render Micro Sparks
+            for (let i = this.sparks.length - 1; i >= 0; i--) {
+                const s = this.sparks[i];
+                s.x += s.vx;
+                s.y += s.vy;
+                s.life -= s.decay;
+
+                if (s.life <= 0) {
+                    this.sparks.splice(i, 1);
+                    continue;
+                }
+
+                const colorBase = colors.fireflies[s.colorIdx];
+                this.ctx.beginPath();
+                this.ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                this.ctx.fillStyle = colorBase + (s.life * 0.8) + ')';
+                this.ctx.fill();
+            }
+
+            // 3. Render Floating Firefly Orbs with Soft Radial Glow
+            for (let i = 0; i < this.fireflies.length; i++) {
+                const f = this.fireflies[i];
+
+                // Smooth organic wandering physics
+                f.vx += (Math.random() - 0.5) * 0.06;
+                f.vy += (Math.random() - 0.5) * 0.06;
+
+                // Speed limit
+                const speed = Math.hypot(f.vx, f.vy);
+                if (speed > 0.8) {
+                    f.vx = (f.vx / speed) * 0.8;
+                    f.vy = (f.vy / speed) * 0.8;
+                }
+
+                // Interactive Mouse repulsion / attraction
+                let mouseGlowBoost = 0;
+                if (this.mouse.x !== null && this.mouse.y !== null) {
+                    const dx = f.x - this.mouse.x;
+                    const dy = f.y - this.mouse.y;
+                    const dist = Math.hypot(dx, dy);
+                    const maxDist = 160;
+
+                    if (dist < maxDist) {
+                        const factor = (1 - dist / maxDist);
+                        f.vx += (dx / dist) * factor * 0.15;
+                        f.vy += (dy / dist) * factor * 0.15;
+                        mouseGlowBoost = factor * 0.45;
+                    }
+                }
+
+                f.x += f.vx;
+                f.y += f.vy;
+
+                // Screen Wrap / Bouncing
+                if (f.x < -20) f.x = w + 20;
+                if (f.x > w + 20) f.x = -20;
+                if (f.y < -20) f.y = h + 20;
+                if (f.y > h + 20) f.y = -20;
+
+                // Pulsing brightness
+                f.pulse += f.pulseSpeed;
+                const alpha = Math.min(1.0, (Math.sin(f.pulse) + 1) / 2 * 0.6 + 0.25 + mouseGlowBoost);
+                const currentRadius = f.baseRadius * (1 + mouseGlowBoost * 0.5);
+
+                const colorBase = colors.fireflies[f.colorIdx];
+
+                // Soft blurred radial halo
+                const glowRadius = currentRadius * (4 + mouseGlowBoost * 3);
+                const grad = this.ctx.createRadialGradient(
+                    f.x, f.y, currentRadius * 0.2,
+                    f.x, f.y, glowRadius
+                );
+                grad.addColorStop(0, colorBase + alpha + ')');
+                grad.addColorStop(0.3, colorBase + (alpha * 0.4) + ')');
+                grad.addColorStop(1, 'transparent');
+
+                this.ctx.beginPath();
+                this.ctx.arc(f.x, f.y, glowRadius, 0, Math.PI * 2);
+                this.ctx.fillStyle = grad;
+                this.ctx.fill();
+
+                // Core intense center dot
+                this.ctx.beginPath();
+                this.ctx.arc(f.x, f.y, currentRadius * 0.8, 0, Math.PI * 2);
+                this.ctx.fillStyle = colors.lead;
+                this.ctx.globalAlpha = alpha;
+                this.ctx.fill();
+                this.ctx.globalAlpha = 1.0;
+            }
+
+            if (this.mode === 'fireflies') {
+                this.animationFrame = requestAnimationFrame(() => this.renderFireflies());
             }
         }
     };
@@ -1053,6 +1235,7 @@
                 tooltip_mode_grid: 'Стандартный фон (Сетка)',
                 tooltip_mode_matrix: 'Режим Matrix Rain',
                 tooltip_mode_particles: 'Режим Неоновые частицы',
+                tooltip_mode_fireflies: 'Режим Космические Светлячки (Fireflies)',
                 tooltip_time: 'Системное время и дата',
                 system_online: 'СИСТЕМА В СЕТИ',
                 hacker_title: 'NETRUNNER BREACH PROTOCOL',
@@ -1098,6 +1281,7 @@
                 tooltip_mode_grid: 'Default background (Grid)',
                 tooltip_mode_matrix: 'Matrix Rain Mode',
                 tooltip_mode_particles: 'Neon Particles Mode',
+                tooltip_mode_fireflies: 'Cosmic Fireflies Mode',
                 tooltip_time: 'System Time & Date',
                 system_online: 'SYSTEM ONLINE',
                 hacker_title: 'NETRUNNER BREACH PROTOCOL',
