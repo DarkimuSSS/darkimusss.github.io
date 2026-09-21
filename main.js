@@ -1878,6 +1878,11 @@
             this.loadYouTubeAPI();
             this.updateTrackInfo();
 
+            // Восстановление состояния открытости панели
+            if (localStorage.getItem('bgm_dock_open') === 'true') {
+                this.showDock();
+            }
+
             // Автовоспроизведение при первом клике на странице
             const onFirstInteraction = () => {
                 if (!this.hasInteracted) {
@@ -2035,11 +2040,13 @@
         showDock() {
             const dock = document.getElementById('musicPlayerDock');
             if (dock) dock.classList.remove('hidden');
+            localStorage.setItem('bgm_dock_open', 'true');
         },
 
         hideDock() {
             const dock = document.getElementById('musicPlayerDock');
             if (dock) dock.classList.add('hidden');
+            localStorage.setItem('bgm_dock_open', 'false');
         },
 
         startProgressTimer() {

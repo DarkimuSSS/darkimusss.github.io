@@ -238,6 +238,7 @@ body::after {
     max-width: 700px;
     width: 90%;
     margin: 40px auto;
+    padding-bottom: 120px;
     text-align: center;
     animation: fadeGlow 1.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
