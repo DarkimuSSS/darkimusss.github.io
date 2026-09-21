@@ -1232,6 +1232,12 @@
                 tooltip_services: 'Инфраструктура & Сервисы',
                 tooltip_activity: 'GitHub Активность & Проекты',
                 tooltip_sound: 'Звуковые эффекты (SFX)',
+                tooltip_music: 'Фоновая музыка (Плеер)',
+                tooltip_shuffle: 'Перемешать треки',
+                tooltip_prev: 'Предыдущий трек',
+                tooltip_play: 'Воспроизведение / Пауза',
+                tooltip_next: 'Следующий трек',
+                tooltip_repeat: 'Повтор трека',
                 tooltip_mode_grid: 'Стандартный фон (Сетка)',
                 tooltip_mode_matrix: 'Режим Matrix Rain',
                 tooltip_mode_particles: 'Режим Неоновые частицы',
@@ -1278,6 +1284,12 @@
                 tooltip_services: 'Infrastructure & Services',
                 tooltip_activity: 'GitHub Activity & Projects',
                 tooltip_sound: 'Sound Effects (SFX)',
+                tooltip_music: 'Background Music (Player)',
+                tooltip_shuffle: 'Shuffle tracks',
+                tooltip_prev: 'Previous track',
+                tooltip_play: 'Play / Pause',
+                tooltip_next: 'Next track',
+                tooltip_repeat: 'Repeat track',
                 tooltip_mode_grid: 'Default background (Grid)',
                 tooltip_mode_matrix: 'Matrix Rain Mode',
                 tooltip_mode_particles: 'Neon Particles Mode',
@@ -1754,10 +1766,346 @@
         }
     };
 
+    // Фоновый музыкальный плеер (YouTube IFrame Player API)
+    const BGMusic = {
+        playlist: [
+            { id: 'iRuKU5wOIa8', title: 'Cyberpunk Ambient', artist: 'YouTube Stream' },
+            { id: '5qap5aO4i9A', title: 'Lofi Hip Hop Radio', artist: 'Lofi Girl' },
+            { id: '4xDzrJKXOOY', title: 'Synthwave Beats', artist: 'ChillSynth' },
+            { id: 'jfKfPfyJRdk', title: 'Relaxing Ambient', artist: 'Chillhop' }
+        ],
+        currentIndex: 0,
+        player: null,
+        isReady: false,
+        isPlaying: false,
+        isShuffle: false,
+        isRepeat: false,
+        enabled: localStorage.getItem('bgm_enabled') !== 'false',
+        volume: parseInt(localStorage.getItem('bgm_volume') || '45'),
+        hasInteracted: false,
+        progressTimer: null,
+
+        init() {
+            const musicBtn = document.getElementById('musicToggle');
+            const dock = document.getElementById('musicPlayerDock');
+            const btnClose = document.getElementById('btnCloseDock');
+            const btnPlayPause = document.getElementById('btnPlayPause');
+            const btnNext = document.getElementById('btnNext');
+            const btnPrev = document.getElementById('btnPrev');
+            const btnShuffle = document.getElementById('btnShuffle');
+            const btnRepeat = document.getElementById('btnRepeat');
+            const volSlider = document.getElementById('volSlider');
+            const progressBarWrapper = document.getElementById('progressBarWrapper');
+
+            // Установка сохраненной громкости
+            if (volSlider) {
+                volSlider.value = this.volume;
+                volSlider.addEventListener('input', (e) => {
+                    this.setVolume(parseInt(e.target.value));
+                });
+            }
+
+            // Кнопка в шапке открывает/закрывает панель
+            if (musicBtn) {
+                musicBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.hasInteracted = true;
+                    if (dock && dock.classList.contains('hidden')) {
+                        this.showDock();
+                        if (!this.isPlaying) this.play();
+                    } else if (dock) {
+                        this.togglePlay();
+                    }
+                });
+            }
+
+            // Закрытие/сворачивание панели плеера
+            if (btnClose) {
+                btnClose.addEventListener('click', () => {
+                    this.hideDock();
+                });
+            }
+
+            // Управление воспроизведением в панели
+            if (btnPlayPause) {
+                btnPlayPause.addEventListener('click', () => {
+                    this.hasInteracted = true;
+                    this.togglePlay();
+                });
+            }
+
+            if (btnNext) {
+                btnNext.addEventListener('click', () => {
+                    this.nextTrack();
+                });
+            }
+
+            if (btnPrev) {
+                btnPrev.addEventListener('click', () => {
+                    this.prevTrack();
+                });
+            }
+
+            if (btnShuffle) {
+                btnShuffle.addEventListener('click', () => {
+                    this.isShuffle = !this.isShuffle;
+                    btnShuffle.classList.toggle('active', this.isShuffle);
+                });
+            }
+
+            if (btnRepeat) {
+                btnRepeat.addEventListener('click', () => {
+                    this.isRepeat = !this.isRepeat;
+                    btnRepeat.classList.toggle('active', this.isRepeat);
+                });
+            }
+
+            // Клик по прогресс-бару для перемотки
+            if (progressBarWrapper) {
+                progressBarWrapper.addEventListener('click', (e) => {
+                    if (!this.player || !this.isReady) return;
+                    const rect = progressBarWrapper.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const pct = Math.max(0, Math.min(1, clickX / rect.width));
+                    const dur = this.player.getDuration() || 0;
+                    if (dur > 0) {
+                        this.player.seekTo(pct * dur, true);
+                    }
+                });
+            }
+
+            // Подключение YouTube IFrame API
+            this.loadYouTubeAPI();
+            this.updateTrackInfo();
+
+            // Автовоспроизведение при первом клике на странице
+            const onFirstInteraction = () => {
+                if (!this.hasInteracted) {
+                    this.hasInteracted = true;
+                    if (this.enabled && this.isReady && !this.isPlaying) {
+                        this.play();
+                    }
+                }
+                window.removeEventListener('pointerdown', onFirstInteraction);
+                window.removeEventListener('keydown', onFirstInteraction);
+            };
+
+            window.addEventListener('pointerdown', onFirstInteraction, { once: true });
+            window.addEventListener('keydown', onFirstInteraction, { once: true });
+        },
+
+        loadYouTubeAPI() {
+            if (!window.YT) {
+                const tag = document.createElement('script');
+                tag.src = 'https://www.youtube.com/iframe_api';
+                const firstScript = document.getElementsByTagName('script')[0];
+                firstScript.parentNode.insertBefore(tag, firstScript);
+            }
+
+            const initPlayer = () => {
+                const currTrack = this.playlist[this.currentIndex];
+                this.player = new YT.Player('ytMusicPlayerContainer', {
+                    height: '1',
+                    width: '1',
+                    videoId: currTrack.id,
+                    playerVars: {
+                        autoplay: 0,
+                        controls: 0,
+                        loop: 0,
+                        enablejsapi: 1,
+                        origin: window.location.origin
+                    },
+                    events: {
+                        onReady: () => {
+                            this.isReady = true;
+                            this.setVolume(this.volume);
+                            if (this.hasInteracted && this.enabled) {
+                                this.play();
+                            }
+                        },
+                        onStateChange: (e) => {
+                            // YT.PlayerState: PLAYING = 1, PAUSED = 2, ENDED = 0
+                            if (e.data === 1) {
+                                this.isPlaying = true;
+                                this.enabled = true;
+                                localStorage.setItem('bgm_enabled', 'true');
+                                this.startProgressTimer();
+                                this.updateUI();
+                            } else if (e.data === 2) {
+                                this.isPlaying = false;
+                                this.stopProgressTimer();
+                                this.updateUI();
+                            } else if (e.data === 0) {
+                                this.isPlaying = false;
+                                this.stopProgressTimer();
+                                if (this.isRepeat) {
+                                    this.play();
+                                } else {
+                                    this.nextTrack();
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+
+            if (window.YT && window.YT.Player) {
+                initPlayer();
+            } else {
+                window.onYouTubeIframeAPIReady = initPlayer;
+            }
+        },
+
+        play() {
+            if (this.player && typeof this.player.playVideo === 'function') {
+                try {
+                    this.player.playVideo();
+                } catch (err) {}
+            }
+        },
+
+        pause() {
+            if (this.player && typeof this.player.pauseVideo === 'function') {
+                try {
+                    this.player.pauseVideo();
+                } catch (err) {}
+            }
+        },
+
+        togglePlay() {
+            if (this.isPlaying) {
+                this.pause();
+                this.enabled = false;
+                localStorage.setItem('bgm_enabled', 'false');
+            } else {
+                this.play();
+                this.enabled = true;
+                localStorage.setItem('bgm_enabled', 'true');
+            }
+        },
+
+        nextTrack() {
+            if (this.isShuffle) {
+                let nextIdx = Math.floor(Math.random() * this.playlist.length);
+                if (nextIdx === this.currentIndex && this.playlist.length > 1) {
+                    nextIdx = (this.currentIndex + 1) % this.playlist.length;
+                }
+                this.currentIndex = nextIdx;
+            } else {
+                this.currentIndex = (this.currentIndex + 1) % this.playlist.length;
+            }
+            this.loadCurrentTrack();
+        },
+
+        prevTrack() {
+            this.currentIndex = (this.currentIndex - 1 + this.playlist.length) % this.playlist.length;
+            this.loadCurrentTrack();
+        },
+
+        loadCurrentTrack() {
+            const track = this.playlist[this.currentIndex];
+            this.updateTrackInfo();
+            if (this.player && typeof this.player.loadVideoById === 'function') {
+                this.player.loadVideoById(track.id);
+            }
+        },
+
+        updateTrackInfo() {
+            const track = this.playlist[this.currentIndex];
+            const titleEl = document.getElementById('trackTitle');
+            const artistEl = document.getElementById('trackArtist');
+            if (titleEl) titleEl.textContent = track.title;
+            if (artistEl) artistEl.textContent = track.artist;
+        },
+
+        setVolume(val) {
+            this.volume = val;
+            localStorage.setItem('bgm_volume', val);
+            if (this.player && typeof this.player.setVolume === 'function') {
+                this.player.setVolume(val);
+            }
+            const volIcon = document.getElementById('volIcon');
+            if (volIcon) {
+                if (val === 0) volIcon.className = 'fas fa-volume-xmark';
+                else if (val < 50) volIcon.className = 'fas fa-volume-low';
+                else volIcon.className = 'fas fa-volume-high';
+            }
+        },
+
+        showDock() {
+            const dock = document.getElementById('musicPlayerDock');
+            if (dock) dock.classList.remove('hidden');
+        },
+
+        hideDock() {
+            const dock = document.getElementById('musicPlayerDock');
+            if (dock) dock.classList.add('hidden');
+        },
+
+        startProgressTimer() {
+            this.stopProgressTimer();
+            this.progressTimer = setInterval(() => {
+                if (!this.player || !this.isPlaying || typeof this.player.getCurrentTime !== 'function') return;
+                const curr = this.player.getCurrentTime() || 0;
+                const dur = this.player.getDuration() || 0;
+                const currTimeEl = document.getElementById('currTime');
+                const durTimeEl = document.getElementById('durTime');
+                const progressFill = document.getElementById('progressFill');
+
+                if (currTimeEl) currTimeEl.textContent = this.formatTime(curr);
+                if (durTimeEl) durTimeEl.textContent = this.formatTime(dur);
+                if (progressFill && dur > 0) {
+                    const pct = (curr / dur) * 100;
+                    progressFill.style.width = `${pct}%`;
+                }
+            }, 500);
+        },
+
+        stopProgressTimer() {
+            if (this.progressTimer) {
+                clearInterval(this.progressTimer);
+                this.progressTimer = null;
+            }
+        },
+
+        formatTime(sec) {
+            const s = Math.floor(sec);
+            const m = Math.floor(s / 60);
+            const r = s % 60;
+            return `${m}:${r < 10 ? '0' : ''}${r}`;
+        },
+
+        updateUI() {
+            const musicBtn = document.getElementById('musicToggle');
+            const musicIcon = document.getElementById('musicIcon');
+            const visualizer = document.getElementById('musicVisualizer');
+            const playerEq = document.getElementById('playerEq');
+            const vinylDisc = document.getElementById('vinylDisc');
+            const mainPlayIcon = document.getElementById('mainPlayIcon');
+
+            if (this.isPlaying) {
+                if (musicBtn) musicBtn.classList.add('active-music');
+                if (musicIcon) musicIcon.className = 'fas fa-compact-disc fa-spin';
+                if (visualizer) visualizer.classList.add('playing');
+                if (playerEq) playerEq.classList.add('playing');
+                if (vinylDisc) vinylDisc.classList.add('spinning');
+                if (mainPlayIcon) mainPlayIcon.className = 'fas fa-pause';
+            } else {
+                if (musicBtn) musicBtn.classList.remove('active-music');
+                if (musicIcon) musicIcon.className = 'fas fa-music';
+                if (visualizer) visualizer.classList.remove('playing');
+                if (playerEq) playerEq.classList.remove('playing');
+                if (vinylDisc) vinylDisc.classList.remove('spinning');
+                if (mainPlayIcon) mainPlayIcon.className = 'fas fa-play';
+            }
+        }
+    };
+
     // Initialize modules
     ThemeEngine.init();
     I18nEngine.init();
     AudioFX.init();
+    BGMusic.init();
     CanvasFX.init();
     GitHubWidget.init();
     ModalManager.init();
