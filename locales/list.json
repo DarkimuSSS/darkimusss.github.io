@@ -1,0 +1,12 @@
+[
+  {
+    "code": "ru",
+    "name": "Русский",
+    "icon": "fa-globe"
+  },
+  {
+    "code": "en",
+    "name": "English",
+    "icon": "fa-globe"
+  }
+]

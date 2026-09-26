@@ -20,98 +20,7 @@
     <canvas id="fxCanvas"></canvas>
 
     <!-- Панель управления и виджет времени -->
-    <div class="top-controls-container">
-        <div class="top-controls">
-            <button id="langToggle" class="control-btn" data-tooltip-key="tooltip_lang" aria-label="Переключить язык">
-                <i class="fas fa-globe"></i>
-                <span class="btn-text" id="langLabel">RU</span>
-            </button>
-
-            <div class="theme-dropdown-wrapper" id="themeDropdownWrapper">
-                <button id="themeToggle" class="control-btn" data-tooltip-key="tooltip_theme" aria-label="Сменить тему">
-                    <i class="fas fa-palette" id="themeIcon"></i>
-                </button>
-                <div class="theme-dropdown-menu" id="themeMenu">
-                    <button class="theme-option" data-theme-val="dark">
-                        <i class="fas fa-moon"></i>
-                        <span class="theme-name">Dark</span>
-                    </button>
-                    <button class="theme-option" data-theme-val="light">
-                        <i class="fas fa-sun"></i>
-                        <span class="theme-name">Light</span>
-                    </button>
-                    <button class="theme-option" data-theme-val="emerald">
-                        <i class="fas fa-gem"></i>
-                        <span class="theme-name">Emerald</span>
-                    </button>
-                    <button class="theme-option" data-theme-val="velvet">
-                        <i class="fas fa-fire"></i>
-                        <span class="theme-name">Velvet Red</span>
-                    </button>
-                </div>
-            </div>
-
-            <button id="servicesBtn" class="control-btn" data-tooltip-key="tooltip_services" aria-label="Сервисы">
-                <i class="fa-solid fa-server"></i>
-                <span class="btn-text" data-i18n="btn_services">Сервисы</span>
-            </button>
-
-            <button id="ghWidgetBtn" class="control-btn" data-tooltip-key="tooltip_activity"
-                aria-label="GitHub Активность">
-                <i class="fa-brands fa-github"></i>
-                <span class="btn-text" data-i18n="btn_activity">GitHub</span>
-            </button>
-
-            <button id="soundToggle" class="control-btn" data-tooltip-key="tooltip_sound" aria-label="Звуковой эффект">
-                <i class="fas fa-volume-mute" id="soundIcon"></i>
-                <span class="btn-text">SFX</span>
-            </button>
-
-            <button id="musicToggle" class="control-btn music-control-btn" data-tooltip-key="tooltip_music"
-                aria-label="Фоновая музыка">
-                <i class="fas fa-music" id="musicIcon"></i>
-                <div class="sound-wave-bars" id="musicVisualizer">
-                    <span class="eq-bar"></span>
-                    <span class="eq-bar"></span>
-                    <span class="eq-bar"></span>
-                </div>
-                <span class="btn-text">Music</span>
-            </button>
-
-            <div class="mode-selector" id="bgModeToggle">
-                <button class="mode-btn active" data-mode="grid" data-tooltip-key="tooltip_mode_grid"
-                    aria-label="Стандартный фон">
-                    <i class="fas fa-border-all"></i>
-                </button>
-                <button class="mode-btn" data-mode="matrix" data-tooltip-key="tooltip_mode_matrix"
-                    aria-label="Режим Matrix Rain">
-                    <i class="fas fa-code"></i>
-                </button>
-                <button class="mode-btn" data-mode="particles" data-tooltip-key="tooltip_mode_particles"
-                    aria-label="Режим Неоновые частицы">
-                    <i class="fas fa-atom"></i>
-                </button>
-                <button class="mode-btn" data-mode="fireflies" data-tooltip-key="tooltip_mode_fireflies"
-                    aria-label="Режим Светлячки">
-                    <i class="fas fa-wand-magic-sparkles"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="system-time-widget" id="systemTimeWidget" data-tooltip-key="tooltip_time">
-            <div class="time-block time-main">
-                <i class="fa-regular fa-clock time-icon"></i>
-                <span id="timeHours">00</span><span class="time-colon">:</span><span id="timeMinutes">00</span><span
-                    class="time-colon">:</span><span id="timeSeconds">00</span>
-                <span class="time-zone" id="timeZone">MSK</span>
-            </div>
-            <div class="time-divider"></div>
-            <div class="time-block time-date">
-                <i class="fa-regular fa-calendar-days date-icon"></i>
-                <span id="timeDate">21 СЕН 2026</span>
-            </div>
-        </div>
-    </div>
+    <div class="top-controls-container"></div>
 
     <!-- Быстрые ссылки (левая панель) -->
     <div class="quick-cards-dock">
@@ -181,26 +90,11 @@
         <p class="tagline">❯ <span id="typewriter"></span> ❮</p>
 
         <div class="links">
-            <a class="link" href="https://t.me/DarkimuSSS" target="_blank" rel="noopener noreferrer">
-                <i class="fa-brands fa-telegram"></i>
-                <span data-i18n="link_telegram">Telegram</span>
+            <button class="link" id="mainSocialsBtn" style="cursor: pointer;">
+                <i class="fa-solid fa-share-nodes"></i>
+                <span data-i18n="btn_socials">Социальные сети</span>
                 <div class="link-glow"></div>
-            </a>
-            <a class="link" href="https://dark-core.ru/" target="_blank" rel="noopener noreferrer">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
-                    </path>
-                </svg>
-                <span data-i18n="link_site">Сайт</span>
-                <div class="link-glow"></div>
-            </a>
-            <a class="link" href="https://github.com/DarkimuSSS" target="_blank" rel="noopener noreferrer">
-                <i class="fa-brands fa-github"></i>
-                <span data-i18n="link_github">GitHub</span>
-                <div class="link-glow"></div>
-            </a>
+            </button>
             <div class="search-container">
                 <div class="search-wrapper">
                     <i class="fas fa-search search-icon"></i>
@@ -215,107 +109,88 @@
             </div>
         </div>
 
-        <!-- Модалка: Сервисы -->
-        <div class="modal-overlay" id="servicesModalOverlay">
-            <div class="services-widget modal-box">
+
+
+        <!-- Модалка: Социальные сети -->
+        <div class="modal-overlay" id="socialsModalOverlay">
+            <div class="services-widget modal-box socials-modal-box">
                 <div class="widget-header">
                     <div class="widget-title">
-                        <i class="fa-solid fa-server"></i>
-                        <span data-i18n="services_header">Инфраструктура & Сервисы</span>
+                        <i class="fa-solid fa-share-nodes title-icon"></i>
+                        <span data-i18n="socials_modal_title">Профили</span>
                     </div>
-                    <button class="modal-close-btn" id="closeServicesModal" title="Закрыть">
+                    <button class="modal-close-btn" id="closeSocialsModal" title="Закрыть">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
+                <div class="socials-grid" id="socialsGrid">
+                    <a href="https://t.me/DarkimuSSS" class="social-card tg" target="_blank" rel="noopener noreferrer">
+                        <div class="social-card-inner">
+                            <div class="social-icon-wrapper">
+                                <i class="fa-brands fa-telegram"></i>
+                            </div>
+                            <div class="social-info">
+                                <span class="social-name">Telegram</span>
+                                <span class="social-handle">@DarkimuSSS</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square external-link-icon"></i>
+                    </a>
 
-                <div class="services-grid">
-                    <a href="https://control.dark-core.ru/" class="service-card" target="_blank"
+                    <a href="https://github.com/DarkimuSSS" class="social-card gh" target="_blank"
                         rel="noopener noreferrer">
-                        <div class="service-card-top">
-                            <div class="service-icon">
-                                <i class="fa-solid fa-sliders"></i>
+                        <div class="social-card-inner">
+                            <div class="social-icon-wrapper">
+                                <i class="fa-brands fa-github"></i>
                             </div>
-                            <span class="service-badge active"><span class="badge-dot"></span> <span
-                                    data-i18n="badge_active">АКТИВЕН</span></span>
+                            <div class="social-info">
+                                <span class="social-name">GitHub</span>
+                                <span class="social-handle">@DarkimuSSS</span>
+                            </div>
                         </div>
-                        <div class="service-info">
-                            <h3 class="service-name">Control Center</h3>
-                            <span class="service-domain">control.dark-core.ru</span>
-                            <p class="service-desc" data-i18n="control_desc">Панель мониторинга серверов</p>
-                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square external-link-icon"></i>
                     </a>
 
-                    <a href="https://wiki.dark-core.ru/" class="service-card" target="_blank" rel="noopener noreferrer">
-                        <div class="service-card-top">
-                            <div class="service-icon">
-                                <i class="fa-solid fa-book-atlas"></i>
+                    <a href="https://discord.com/invite/darkimusss" class="social-card ds" target="_blank"
+                        rel="noopener noreferrer">
+                        <div class="social-card-inner">
+                            <div class="social-icon-wrapper">
+                                <i class="fa-brands fa-discord"></i>
                             </div>
-                            <span class="service-badge active"><span class="badge-dot"></span> <span
-                                    data-i18n="badge_active">АКТИВЕН</span></span>
+                            <div class="social-info">
+                                <span class="social-name">Discord</span>
+                                <span class="social-handle">Community Server</span>
+                            </div>
                         </div>
-                        <div class="service-info">
-                            <h3 class="service-name">Wiki CubixWorld</h3>
-                            <span class="service-domain">wiki.dark-core.ru</span>
-                            <p class="service-desc" data-i18n="wiki_desc">База знаний, гайды и правила</p>
-                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square external-link-icon"></i>
                     </a>
 
-                    <div class="service-card offline" title="Сервис временно недоступен">
-                        <div class="service-card-top">
-                            <div class="service-icon">
-                                <i class="fa-solid fa-network-wired"></i>
+                    <a href="https://steamcommunity.com/id/lildarkimusss/" class="social-card st" target="_blank"
+                        rel="noopener noreferrer">
+                        <div class="social-card-inner">
+                            <div class="social-icon-wrapper">
+                                <i class="fa-brands fa-steam"></i>
                             </div>
-                            <span class="service-badge offline" data-i18n="badge_offline">ОТКЛЮЧЕН</span>
-                        </div>
-                        <div class="service-info">
-                            <h3 class="service-name" data-i18n="projects_name">Проекты</h3>
-                            <span class="service-domain">projects.dark-core.ru</span>
-                            <p class="service-desc" data-i18n="projects_desc">Каталог актуальных разработок</p>
-                        </div>
-                    </div>
-
-                    <div class="service-card offline" title="Сервис временно недоступен">
-                        <div class="service-card-top">
-                            <div class="service-icon">
-                                <i class="fa-solid fa-shield-halved"></i>
+                            <div class="social-info">
+                                <span class="social-name">Steam</span>
+                                <span class="social-handle">@lildarkimusss</span>
                             </div>
-                            <span class="service-badge offline" data-i18n="badge_offline">ОТКЛЮЧЕН</span>
                         </div>
-                        <div class="service-info">
-                            <h3 class="service-name">Dark-Core ID</h3>
-                            <span class="service-domain">sso.dark-core.ru</span>
-                            <p class="service-desc" data-i18n="sso_desc">Единая система авторизации (SSO)</p>
-                        </div>
-                    </div>
-
-                    <a href="https://www.speedtest.net/" class="service-card" target="_blank" rel="noopener noreferrer">
-                        <div class="service-card-top">
-                            <div class="service-icon">
-                                <i class="fa-solid fa-gauge-high"></i>
-                            </div>
-                            <span class="service-badge active"><span class="badge-dot"></span> <span
-                                    data-i18n="badge_active">АКТИВЕН</span></span>
-                        </div>
-                        <div class="service-info">
-                            <h3 class="service-name">Speedtest</h3>
-                            <span class="service-domain">speedtest.net</span>
-                            <p class="service-desc" data-i18n="speedtest_desc">Измерение скорости соединения</p>
-                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square external-link-icon"></i>
                     </a>
 
-                    <a href="https://www.google.com/" class="service-card" target="_blank" rel="noopener noreferrer">
-                        <div class="service-card-top">
-                            <div class="service-icon">
-                                <i class="fa-solid fa-earth-americas"></i>
+                    <a href="https://wiki.dark-core.ru/" class="social-card wk" target="_blank"
+                        rel="noopener noreferrer">
+                        <div class="social-card-inner">
+                            <div class="social-icon-wrapper">
+                                <i class="fa-solid fa-book"></i>
                             </div>
-                            <span class="service-badge active"><span class="badge-dot"></span> <span
-                                    data-i18n="badge_active">АКТИВЕН</span></span>
+                            <div class="social-info">
+                                <span class="social-name">CubixWorld Wiki</span>
+                                <span class="social-handle">wiki.dark-core.ru</span>
+                            </div>
                         </div>
-                        <div class="service-info">
-                            <h3 class="service-name">Google</h3>
-                            <span class="service-domain">google.com</span>
-                            <p class="service-desc" data-i18n="google_desc">Поиск в интернете</p>
-                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square external-link-icon"></i>
                     </a>
                 </div>
             </div>
@@ -479,6 +354,7 @@
         <div id="ytMusicPlayerContainer"
             style="display:none; position:fixed; width:1px; height:1px; opacity:0; pointer-events:none;"></div>
 
+        <script src="navpanel.js"></script>
         <script src="main.js"></script>
 </body>
 

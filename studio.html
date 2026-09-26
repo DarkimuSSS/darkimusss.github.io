@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Cyber Studio & Wallpaper Generator | darkimusss</title>
+    <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="images/favicon.jpg">
+    <link rel="apple-touch-icon" href="images/favicon.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="studio-page">
+    <div class="bg-theme-layer dark-bg"></div>
+    <div class="bg-theme-layer light-bg"></div>
+    <div class="bg-theme-layer emerald-bg"></div>
+    <div class="bg-theme-layer velvet-bg"></div>
+    <canvas id="fxCanvas"></canvas>
+
+    <!-- Панель управления -->
+    <div class="top-controls-container"></div>
+
+
+
+    <div class="bg-grid"></div>
+
+    <!-- Основной контент генератора обоев -->
+    <div class="lab-container">
+
+
+        <div class="lab-workspace">
+            <!-- Превью Холст -->
+            <div class="canvas-preview-box">
+                <div class="canvas-wrapper">
+                    <canvas id="wallpaperCanvas" width="1920" height="1080"></canvas>
+                </div>
+                <div class="canvas-actions">
+                    <button class="lab-btn primary" id="downloadWallpaperBtn">
+                        <i class="fa-solid fa-download"></i> <span data-i18n="studio_btn_download">Скачать FHD (1080p)</span>
+                    </button>
+                    <button class="lab-btn secondary" id="randomizeParamsBtn">
+                        <i class="fa-solid fa-dice"></i> <span data-i18n="studio_btn_random">Рандом</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Панель управления параметрами -->
+            <div class="controls-panel">
+                <h3 class="panel-section-title"><i class="fa-solid fa-sliders"></i> <span data-i18n="studio_settings_title">Настройки Генератора</span></h3>
+
+                <!-- Фоновое Изображение -->
+                <div class="control-group">
+                    <label data-i18n="studio_bg_image">Фоновое изображение</label>
+                    <div class="bg-img-selector-grid">
+                        <button class="bg-img-chip active" data-bg-type="none">
+                            <i class="fa-solid fa-ban"></i> <span data-i18n="studio_bg_none">Без арта</span>
+                        </button>
+                        <button class="bg-img-chip" data-bg-type="image" data-src="images/blackbg.jpg">
+                            <i class="fa-solid fa-moon"></i> Dark Art
+                        </button>
+                        <button class="bg-img-chip" data-bg-type="image" data-src="images/lightbg.jpg">
+                            <i class="fa-solid fa-sun"></i> Light Art
+                        </button>
+                        <button class="bg-img-chip" data-bg-type="image" data-src="images/emeraldbg.jpg">
+                            <i class="fa-solid fa-gem"></i> Emerald Art
+                        </button>
+                        <button class="bg-img-chip" data-bg-type="image" data-src="images/velvetbg.jpg">
+                            <i class="fa-solid fa-fire"></i> Velvet Art
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Стиль Паттерна -->
+                <div class="control-group">
+                    <label data-i18n="studio_pattern_style">Стиль фонового узора</label>
+                    <div class="style-selector-grid">
+                        <button class="style-chip active" data-style="cyber-grid">
+                            <i class="fa-solid fa-border-all"></i> Neon Grid
+                        </button>
+                        <button class="style-chip" data-style="matrix-rain">
+                            <i class="fa-solid fa-code"></i> Matrix Code
+                        </button>
+                        <button class="style-chip" data-style="neon-waves">
+                            <i class="fa-solid fa-wave-square"></i> Synth Waves
+                        </button>
+                        <button class="style-chip" data-style="hex-nodes">
+                            <i class="fa-solid fa-cubes"></i> Hexagon Net
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Неоновый Текст / Никнейм -->
+                <div class="control-group">
+                    <label for="textInput" data-i18n="studio_text_label">Текст логотипа / Ник</label>
+                    <input type="text" id="textInput" class="lab-text-input" value="DARKIMUSSS"
+                        placeholder="Введите ваш текст..." data-i18n-ph="studio_text_ph">
+                </div>
+
+                <!-- Цветовая Палитра & Кастомный цвет -->
+                <div class="control-group">
+                    <label data-i18n="studio_gradient_label">Цветовой градиент</label>
+                    <div class="palette-presets">
+                        <button class="palette-chip active" data-color1="#38bdf8" data-color2="#a855f7"
+                            style="background: linear-gradient(135deg, #38bdf8, #a855f7);"
+                            title="Cyan & Purple"></button>
+                        <button class="palette-chip" data-color1="#10b981" data-color2="#06b6d4"
+                            style="background: linear-gradient(135deg, #10b981, #06b6d4);"
+                            title="Emerald & Cyan"></button>
+                        <button class="palette-chip" data-color1="#f43f5e" data-color2="#fbbf24"
+                            style="background: linear-gradient(135deg, #f43f5e, #fbbf24);"
+                            title="Crimson & Gold"></button>
+                        <button class="palette-chip" data-color1="#ec4899" data-color2="#8b5cf6"
+                            style="background: linear-gradient(135deg, #ec4899, #8b5cf6);"
+                            title="Pink & Violet"></button>
+                        <button class="palette-chip" data-color1="#00f2fe" data-color2="#4facfe"
+                            style="background: linear-gradient(135deg, #00f2fe, #4facfe);"
+                            title="Electric Blue"></button>
+                        <button class="palette-chip" data-color1="#ff007f" data-color2="#7928ca"
+                            style="background: linear-gradient(135deg, #ff007f, #7928ca);" title="Neon Purple"></button>
+                        <button class="palette-chip" data-color1="#00ffcc" data-color2="#3a7bd5"
+                            style="background: linear-gradient(135deg, #00ffcc, #3a7bd5);"
+                            title="Mint & Royal"></button>
+                        <button class="palette-chip" data-color1="#f97316" data-color2="#e11d48"
+                            style="background: linear-gradient(135deg, #f97316, #e11d48);"
+                            title="Sunset Orange"></button>
+                        <button class="palette-chip" data-color1="#a855f7" data-color2="#06b6d4"
+                            style="background: linear-gradient(135deg, #a855f7, #06b6d4);" title="Cyber Synth"></button>
+                    </div>
+                    <div class="custom-color-inputs">
+                        <div class="color-picker-box">
+                            <span data-i18n="studio_color1">Цвет 1</span>
+                            <input type="color" id="customColor1" value="#38bdf8">
+                        </div>
+                        <div class="color-picker-box">
+                            <span data-i18n="studio_color2">Цвет 2</span>
+                            <input type="color" id="customColor2" value="#a855f7">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Размер Шрифта -->
+                <div class="control-group">
+                    <label for="fontSizeSlider"><span data-i18n="studio_font_size">Размер текста:</span> <span id="fontSizeVal">110px</span></label>
+                    <input type="range" id="fontSizeSlider" class="lab-slider" min="40" max="220" value="110">
+                </div>
+
+                <!-- Плотность эффектов / Glow -->
+                <div class="control-group">
+                    <label for="glowSlider"><span data-i18n="studio_glow_strength">Сила свечения (Glow):</span> <span id="glowVal">30px</span></label>
+                    <input type="range" id="glowSlider" class="lab-slider" min="5" max="80" value="30">
+                </div>
+
+                <div class="control-group">
+                    <label for="densitySlider"><span data-i18n="studio_density">Плотность узора:</span> <span id="densityVal">50</span></label>
+                    <input type="range" id="densitySlider" class="lab-slider" min="10" max="100" value="50">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="navpanel.js"></script>
+    <script src="main.js"></script>
+    <script>
+        // Скрипт интерактивного холста Wallpaper Studio
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('wallpaperCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const textInput = document.getElementById('textInput');
+            const glowSlider = document.getElementById('glowSlider');
+            const glowVal = document.getElementById('glowVal');
+            const densitySlider = document.getElementById('densitySlider');
+            const densityVal = document.getElementById('densityVal');
+            const fontSizeSlider = document.getElementById('fontSizeSlider');
+            const fontSizeVal = document.getElementById('fontSizeVal');
+            const customColor1 = document.getElementById('customColor1');
+            const customColor2 = document.getElementById('customColor2');
+            const downloadBtn = document.getElementById('downloadWallpaperBtn');
+            const randomizeBtn = document.getElementById('randomizeParamsBtn');
+            const styleChips = document.querySelectorAll('.style-chip');
+            const paletteChips = document.querySelectorAll('.palette-chip');
+
+            let currentStyle = 'cyber-grid';
+            let color1 = '#38bdf8';
+            let color2 = '#a855f7';
+
+            const bgImgChips = document.querySelectorAll('.bg-img-chip');
+            let loadedBgImage = null;
+            let currentBgSrc = null;
+
+            function renderWallpaper() {
+                const width = canvas.width;
+                const height = canvas.height;
+                const text = textInput.value || 'CYBER';
+                const glow = parseInt(glowSlider.value);
+                const density = parseInt(densitySlider.value);
+                const fontSize = parseInt(fontSizeSlider.value);
+
+                // 1. Фон
+                if (loadedBgImage) {
+                    ctx.drawImage(loadedBgImage, 0, 0, width, height);
+                    // Затеняющая подложка поверх арта для контрастности
+                    ctx.fillStyle = 'rgba(2, 5, 14, 0.45)';
+                    ctx.fillRect(0, 0, width, height);
+                } else {
+                    const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+                    bgGrad.addColorStop(0, '#040714');
+                    bgGrad.addColorStop(0.5, '#090e24');
+                    bgGrad.addColorStop(1, '#02040a');
+                    ctx.fillStyle = bgGrad;
+                    ctx.fillRect(0, 0, width, height);
+                }
+
+                // 2. Узор фона
+                ctx.save();
+                if (currentStyle === 'cyber-grid') {
+                    ctx.strokeStyle = color1;
+                    ctx.globalAlpha = 0.12;
+                    ctx.lineWidth = 2;
+                    const gridSize = Math.floor(130 - density * 0.9);
+                    for (let x = 0; x <= width; x += gridSize) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, 0);
+                        ctx.lineTo(x, height);
+                        ctx.stroke();
+                    }
+                    for (let y = 0; y <= height; y += gridSize) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, y);
+                        ctx.lineTo(width, y);
+                        ctx.stroke();
+                    }
+                } else if (currentStyle === 'matrix-rain') {
+                    ctx.fillStyle = color1;
+                    ctx.globalAlpha = 0.28;
+                    ctx.font = '22px "JetBrains Mono", "Microsoft YaHei", monospace';
+                    const chars = '天地玄黃宇宙洪荒日月盈昃辰宿列張寒來暑往秋收冬藏雲騰致雨露結為霜金生麗水玉出崑岡劍號巨闕珠稱夜光果珍李重芥姜海鹹河淡鱗潛羽翔龍師火帝鳥官人皇始制文字乃服衣裳推位讓國有虞陶唐弔民伐罪周發殷湯坐朝問道垂拱平章愛育黎首臣伏戎羌暇邇壹體率賓歸王電光影龍鳳天雲風火水木金土星月日山川海神心魂夢無極微網碼字虛實陰陽玄靈道法自然太極乾坤震巽坎離艮兌';
+                    const cols = Math.floor(density * 1.5);
+                    for (let i = 0; i < cols; i++) {
+                        const x = Math.random() * width;
+                        const y = Math.random() * height;
+                        const char = chars[Math.floor(Math.random() * chars.length)];
+                        ctx.fillText(char, x, y);
+                    }
+                } else if (currentStyle === 'neon-waves') {
+                    ctx.strokeStyle = color2;
+                    ctx.globalAlpha = 0.22;
+                    ctx.lineWidth = 3;
+                    for (let j = 0; j < 8; j++) {
+                        ctx.beginPath();
+                        for (let x = 0; x < width; x += 10) {
+                            const y = height / 2 + Math.sin((x + j * 90) * 0.008) * (60 + j * 25);
+                            if (x === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                        ctx.stroke();
+                    }
+                } else if (currentStyle === 'hex-nodes') {
+                    ctx.strokeStyle = color1;
+                    ctx.globalAlpha = 0.18;
+                    ctx.lineWidth = 2;
+                    const radius = Math.max(25, Math.floor(90 - density * 0.5));
+                    const a = 2 * Math.PI / 6;
+                    const r = radius;
+                    const h = r * Math.sin(a);
+                    const w = r * (1 + Math.cos(a));
+
+                    function drawHex(cx, cy) {
+                        ctx.beginPath();
+                        for (let i = 0; i < 6; i++) {
+                            const angle = a * i;
+                            const x = cx + r * Math.cos(angle);
+                            const y = cy + r * Math.sin(angle);
+                            if (i === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                        ctx.closePath();
+                        ctx.stroke();
+                    }
+
+                    for (let x = -r; x < width + r * 2; x += w) {
+                        const col = Math.floor(x / w);
+                        for (let y = -r; y < height + r * 2; y += h * 2) {
+                            const cy = (col % 2 === 0) ? y : y + h;
+                            drawHex(x, cy);
+                        }
+                    }
+                }
+                ctx.restore();
+
+                // 3. Частицы / Неоновое сияние по центру
+                ctx.save();
+                const glowGrad = ctx.createRadialGradient(width / 2, height / 2, 50, width / 2, height / 2, 600);
+                glowGrad.addColorStop(0, color1);
+                glowGrad.addColorStop(0.6, color2);
+                glowGrad.addColorStop(1, 'transparent');
+                ctx.globalAlpha = 0.25;
+                ctx.fillStyle = glowGrad;
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2, 600, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // 4. Текст в центре
+                ctx.save();
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = `900 ${fontSize}px "Inter", "Segoe UI", sans-serif`;
+
+                // Неоновый Glow эффект
+                ctx.shadowColor = color1;
+                ctx.shadowBlur = glow;
+
+                const textGrad = ctx.createLinearGradient(width / 2 - 300, 0, width / 2 + 300, 0);
+                textGrad.addColorStop(0, '#ffffff');
+                textGrad.addColorStop(0.5, color1);
+                textGrad.addColorStop(1, color2);
+                ctx.fillStyle = textGrad;
+
+                ctx.fillText(text.toUpperCase(), width / 2, height / 2);
+
+                // Окантовка текста
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+                ctx.lineWidth = Math.max(1, Math.floor(fontSize / 45));
+                ctx.strokeText(text.toUpperCase(), width / 2, height / 2);
+                ctx.restore();
+
+                // 5. Аккуратный водяной знак в правом нижнем углу
+                ctx.save();
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'bottom';
+                ctx.font = '600 22px "Inter", "Segoe UI", sans-serif';
+                ctx.shadowColor = color1;
+                ctx.shadowBlur = 10;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+                ctx.fillText('darkimusss.github.io', width - 40, height - 35);
+                ctx.restore();
+            }
+
+            bgImgChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    bgImgChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+
+                    const type = chip.dataset.bgType;
+                    if (type === 'image') {
+                        const img = new Image();
+                        img.onload = () => {
+                            loadedBgImage = img;
+                            renderWallpaper();
+                        };
+                        img.src = chip.dataset.src;
+                    } else {
+                        loadedBgImage = null;
+                        renderWallpaper();
+                    }
+                });
+            });
+
+            // Слушатели событий управления
+            textInput.addEventListener('input', renderWallpaper);
+
+            fontSizeSlider.addEventListener('input', (e) => {
+                fontSizeVal.textContent = e.target.value + 'px';
+                renderWallpaper();
+            });
+
+            glowSlider.addEventListener('input', (e) => {
+                glowVal.textContent = e.target.value + 'px';
+                renderWallpaper();
+            });
+
+            densitySlider.addEventListener('input', (e) => {
+                densityVal.textContent = e.target.value;
+                renderWallpaper();
+            });
+
+            customColor1.addEventListener('input', (e) => {
+                color1 = e.target.value;
+                paletteChips.forEach(c => c.classList.remove('active'));
+                renderWallpaper();
+            });
+
+            customColor2.addEventListener('input', (e) => {
+                color2 = e.target.value;
+                paletteChips.forEach(c => c.classList.remove('active'));
+                renderWallpaper();
+            });
+
+            styleChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    styleChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    currentStyle = chip.dataset.style;
+                    renderWallpaper();
+                });
+            });
+
+            paletteChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    paletteChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    color1 = chip.dataset.color1;
+                    color2 = chip.dataset.color2;
+                    customColor1.value = color1;
+                    customColor2.value = color2;
+                    renderWallpaper();
+                });
+            });
+
+            randomizeBtn.addEventListener('click', () => {
+                const styles = ['cyber-grid', 'matrix-rain', 'neon-waves', 'hex-nodes'];
+                const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+                currentStyle = randomStyle;
+                styleChips.forEach(c => c.classList.toggle('active', c.dataset.style === randomStyle));
+
+                const randomPalette = paletteChips[Math.floor(Math.random() * paletteChips.length)];
+                paletteChips.forEach(c => c.classList.remove('active'));
+                randomPalette.classList.add('active');
+                color1 = randomPalette.dataset.color1;
+                color2 = randomPalette.dataset.color2;
+                customColor1.value = color1;
+                customColor2.value = color2;
+
+                glowSlider.value = Math.floor(Math.random() * 50 + 15);
+                glowVal.textContent = glowSlider.value + 'px';
+
+                fontSizeSlider.value = Math.floor(Math.random() * 80 + 80);
+                fontSizeVal.textContent = fontSizeSlider.value + 'px';
+
+                densitySlider.value = Math.floor(Math.random() * 70 + 20);
+                densityVal.textContent = densitySlider.value;
+
+                renderWallpaper();
+            });
+
+            downloadBtn.addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = `cyber-wallpaper-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+
+            renderWallpaper();
+        });
+    </script>
+</body>
+
+</html>

@@ -132,6 +132,24 @@
         }
     };
 
+    // Глобальная функция взаимного закрытия выпадающих меню
+    window.closeAllDropdowns = function () {
+        const dropdowns = [
+            { wrapper: 'themeDropdownWrapper', menu: 'themeMenu' },
+            { wrapper: 'langDropdownWrapper', menu: 'langMenu' },
+            { wrapper: 'bgModeDropdownWrapper', menu: 'bgModeMenu' }
+        ];
+        dropdowns.forEach(d => {
+            const w = document.getElementById(d.wrapper);
+            const m = document.getElementById(d.menu);
+            if (w) w.classList.remove('active');
+            if (m) m.classList.remove('active');
+        });
+        if (typeof TooltipEngine !== 'undefined' && TooltipEngine.hide) {
+            TooltipEngine.hide();
+        }
+    };
+
     // Фоновые анимации canvas (Матрица и Неоновые частицы)
     const CanvasFX = {
         canvas: null,
@@ -161,21 +179,59 @@
                 this.mouse.y = e.clientY;
             });
 
-            const modeToggle = document.getElementById('bgModeToggle');
-            if (modeToggle) {
-                const btns = modeToggle.querySelectorAll('.mode-btn');
-                btns.forEach(btn => {
-                    if (btn.dataset.mode === this.mode) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
+            const wrapper = document.getElementById('bgModeDropdownWrapper');
+            const toggleBtn = document.getElementById('bgModeToggleBtn');
+            const menu = document.getElementById('bgModeMenu');
 
-                    btn.addEventListener('click', () => {
-                        btns.forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        this.setMode(btn.dataset.mode);
-                        AudioFX.playClick();
+            if (wrapper && toggleBtn && menu) {
+                const options = menu.querySelectorAll('.mode-option');
+
+                const updateActiveUI = (modeVal) => {
+                    options.forEach(opt => {
+                        if (opt.dataset.modeVal === modeVal) {
+                            opt.classList.add('active');
+                            const iconClass = opt.querySelector('i')?.className;
+                            const mainIcon = document.getElementById('bgModeIcon');
+                            if (mainIcon && iconClass) {
+                                mainIcon.className = iconClass;
+                            }
+                        } else {
+                            opt.classList.remove('active');
+                        }
+                    });
+                };
+
+                updateActiveUI(this.mode);
+
+                toggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = menu.classList.contains('active');
+                    window.closeAllDropdowns();
+                    if (!isOpen) {
+                        menu.classList.add('active');
+                        wrapper.classList.add('active');
+                    }
+                    AudioFX.playClick();
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!wrapper.contains(e.target)) {
+                        menu.classList.remove('active');
+                        wrapper.classList.remove('active');
+                    }
+                });
+
+                options.forEach(opt => {
+                    opt.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const newMode = opt.dataset.modeVal;
+                        if (newMode) {
+                            this.setMode(newMode);
+                            updateActiveUI(newMode);
+                            AudioFX.playClick();
+                        }
+                        menu.classList.remove('active');
+                        wrapper.classList.remove('active');
                     });
                 });
             }
@@ -1017,6 +1073,11 @@
 
     // Менеджер модалок
     const ModalManager = {
+        updateBodyState() {
+            const hasActiveModal = document.querySelector('.modal-overlay.active') !== null;
+            document.body.classList.toggle('modal-open', hasActiveModal);
+        },
+
         closeAllModals() {
             document.querySelectorAll('.modal-overlay').forEach(overlay => {
                 overlay.classList.remove('active');
@@ -1025,16 +1086,20 @@
                 HackerGameEngine.stopTimer();
                 HackerGameEngine.gameActive = false;
             }
+            this.updateBodyState();
         },
 
         openModal(overlay) {
             if (!overlay) return;
             this.closeAllModals();
             overlay.classList.add('active');
+            this.updateBodyState();
             AudioFX.playClick();
         },
 
         init() {
+            this.setupModal('mainSocialsBtn', 'socialsModalOverlay', 'closeSocialsModal');
+            this.setupModal('socialsWidgetBtn', 'socialsModalOverlay', 'closeSocialsModal');
             this.setupModal('servicesBtn', 'servicesModalOverlay', 'closeServicesModal');
             this.setupModal('ghWidgetBtn', 'ghModalOverlay', 'closeGhModal');
         },
@@ -1054,6 +1119,7 @@
             if (closeBtn && overlay) {
                 closeBtn.addEventListener('click', () => {
                     overlay.classList.remove('active');
+                    this.updateBodyState();
                     AudioFX.playClick();
                 });
             }
@@ -1062,6 +1128,7 @@
                 overlay.addEventListener('click', (e) => {
                     if (e.target === overlay) {
                         overlay.classList.remove('active');
+                        this.updateBodyState();
                         AudioFX.playClick();
                     }
                 });
@@ -1069,6 +1136,7 @@
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape' && overlay.classList.contains('active')) {
                         overlay.classList.remove('active');
+                        this.updateBodyState();
                         AudioFX.playClick();
                     }
                 });
@@ -1136,6 +1204,9 @@
         },
 
         openMenu() {
+            if (typeof window.closeAllDropdowns === 'function') {
+                window.closeAllDropdowns();
+            }
             const wrapper = document.getElementById('themeDropdownWrapper');
             const menu = document.getElementById('themeMenu');
             if (wrapper) wrapper.classList.add('active');
@@ -1195,146 +1266,138 @@
         }
     };
 
-    // Мультиязычность (RU / EN)
+    // Мультиязычность (динамическая загрузка /locales/list.json и JSON языков)
     const I18nEngine = {
         lang: 'ru',
+        availableLangs: [],
+        dictionary: {},
 
-        dictionary: {
-            ru: {
-                typewriter: 'Мой план — это баг. Но он работает.',
-                btn_services: 'Сервисы',
-                btn_activity: 'GitHub',
-                link_telegram: 'Telegram',
-                link_site: 'Сайт',
-                link_github: 'GitHub',
-                search_placeholder: 'Поиск в Google / Enter →',
-                services_header: 'Инфраструктура & Сервисы',
-                badge_active: 'АКТИВЕН',
-                badge_offline: 'ОТКЛЮЧЕН',
-                control_desc: 'Панель мониторинга серверов',
-                wiki_desc: 'База знаний, гайды и правила',
-                projects_name: 'Проекты',
-                projects_desc: 'Каталог актуальных разработок',
-                sso_desc: 'Единая система авторизации (SSO)',
-                speedtest_desc: 'Измерение скорости соединения',
-                google_desc: 'Поиск в интернете',
-                gh_header: 'GitHub Активность',
-                status_online: 'Онлайн',
-                status_active: 'Активен',
-                status_loading: 'Загрузка...',
-                stat_repos: 'Репозитории',
-                stat_followers: 'Подписчики',
-                stat_stars: 'Звёзды',
-                fallback_desc1: 'Личный портал и веб-интерфейс в формате Cyberpunk / Glassmorphism.',
-                fallback_desc2: 'Набор основных проектов, скриптов и систем управления.',
-                tooltip_lang: 'Переключить язык (RU / EN)',
-                tooltip_theme: 'Сменить тему (Dark / Light)',
-                tooltip_services: 'Инфраструктура & Сервисы',
-                tooltip_activity: 'GitHub Активность & Проекты',
-                tooltip_sound: 'Звуковые эффекты (SFX)',
-                tooltip_music: 'Фоновая музыка (Плеер)',
-                tooltip_shuffle: 'Перемешать треки',
-                tooltip_prev: 'Предыдущий трек',
-                tooltip_play: 'Воспроизведение / Пауза',
-                tooltip_next: 'Следующий трек',
-                tooltip_repeat: 'Повтор трека',
-                tooltip_mode_grid: 'Стандартный фон (Сетка)',
-                tooltip_mode_matrix: 'Режим Matrix Rain',
-                tooltip_mode_particles: 'Режим Неоновые частицы',
-                tooltip_mode_fireflies: 'Режим Космические Светлячки (Fireflies)',
-                tooltip_time: 'Системное время и дата',
-                system_online: 'СИСТЕМА В СЕТИ',
-                hacker_title: 'NETRUNNER BREACH PROTOCOL',
-                hacker_timer: 'ОСТАЛОСЬ ВРЕМЕНИ:',
-                hacker_score: 'ОЧКИ:',
-                hacker_target: 'ЦЕЛЕВАЯ ПОСЛЕДОВАТЕЛЬНОСТЬ:',
-                hacker_buffer: 'БУФЕР ВВОДА:',
-                hacker_restart: 'ПЕРЕЗАПУСК ПРОТОКОЛА',
-                tooltip_hacker: 'Пасхалка: Кликни 3 раза или Ctrl+Shift+H'
-            },
-            en: {
-                typewriter: 'My plan is a bug. But it works.',
-                btn_services: 'Services',
-                btn_activity: 'GitHub',
-                link_telegram: 'Telegram',
-                link_site: 'Website',
-                link_github: 'GitHub',
-                search_placeholder: 'Search Google / Enter →',
-                services_header: 'Infrastructure & Services',
-                badge_active: 'ONLINE',
-                badge_offline: 'OFFLINE',
-                control_desc: 'Server monitoring dashboard',
-                wiki_desc: 'Knowledge base, guides & rules',
-                projects_name: 'Projects',
-                projects_desc: 'Catalog of current projects',
-                sso_desc: 'Single Sign-On system (SSO)',
-                speedtest_desc: 'Connection speed measurement',
-                google_desc: 'Web search',
-                gh_header: 'GitHub Activity',
-                status_online: 'Online',
-                status_active: 'Active',
-                status_loading: 'Loading...',
-                stat_repos: 'Repositories',
-                stat_followers: 'Followers',
-                stat_stars: 'Stars',
-                fallback_desc1: 'Personal portal & web interface in Cyberpunk / Glassmorphism style.',
-                fallback_desc2: 'Collection of core projects, scripts & management systems.',
-                tooltip_lang: 'Switch language (RU / EN)',
-                tooltip_theme: 'Toggle theme (Dark / Light)',
-                tooltip_services: 'Infrastructure & Services',
-                tooltip_activity: 'GitHub Activity & Projects',
-                tooltip_sound: 'Sound Effects (SFX)',
-                tooltip_music: 'Background Music (Player)',
-                tooltip_shuffle: 'Shuffle tracks',
-                tooltip_prev: 'Previous track',
-                tooltip_play: 'Play / Pause',
-                tooltip_next: 'Next track',
-                tooltip_repeat: 'Repeat track',
-                tooltip_mode_grid: 'Default background (Grid)',
-                tooltip_mode_matrix: 'Matrix Rain Mode',
-                tooltip_mode_particles: 'Neon Particles Mode',
-                tooltip_mode_fireflies: 'Cosmic Fireflies Mode',
-                tooltip_time: 'System Time & Date',
-                system_online: 'SYSTEM ONLINE',
-                hacker_title: 'NETRUNNER BREACH PROTOCOL',
-                hacker_timer: 'TIME REMAINING:',
-                hacker_score: 'SCORE:',
-                hacker_target: 'TARGET SEQUENCE:',
-                hacker_buffer: 'INPUT BUFFER:',
-                hacker_restart: 'RESTART PROTOCOL',
-                tooltip_hacker: 'Easter Egg: Click 3x or Ctrl+Shift+H'
+        t(key) {
+            const dict = this.dictionary[this.lang] || this.dictionary.ru || {};
+            return dict[key] || key;
+        },
+
+        async loadLocaleList() {
+            try {
+                const res = await fetch('locales/list.json');
+                if (res.ok) {
+                    this.availableLangs = await res.json();
+                }
+            } catch (err) {
+                console.warn('[I18nEngine] Failed to load locales/list.json:', err);
+                this.availableLangs = [
+                    { code: 'ru', name: 'Русский', icon: 'fa-globe' },
+                    { code: 'en', name: 'English', icon: 'fa-globe' }
+                ];
             }
         },
 
-        init() {
+        async loadLocale(lang) {
+            if (this.dictionary[lang]) return this.dictionary[lang];
+            try {
+                const response = await fetch(`locales/${lang}.json`);
+                if (response.ok) {
+                    const data = await response.json();
+                    this.dictionary[lang] = data;
+                    return data;
+                }
+            } catch (err) {
+                console.warn(`[I18nEngine] Failed to load locale file locales/${lang}.json:`, err);
+            }
+            return null;
+        },
+
+        async init() {
+            await this.loadLocaleList();
+
             const savedLang = localStorage.getItem('user_lang');
-            if (savedLang && (savedLang === 'ru' || savedLang === 'en')) {
+            const validCodes = this.availableLangs.map(l => l.code);
+
+            if (savedLang && validCodes.includes(savedLang)) {
                 this.lang = savedLang;
             } else {
                 const userNavLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
                 this.lang = userNavLang.startsWith('ru') ? 'ru' : 'en';
+                if (!validCodes.includes(this.lang)) {
+                    this.lang = validCodes[0] || 'ru';
+                }
             }
 
-            const langBtn = document.getElementById('langToggle');
-            if (langBtn) {
-                langBtn.addEventListener('click', () => {
-                    this.lang = this.lang === 'ru' ? 'en' : 'ru';
-                    localStorage.setItem('user_lang', this.lang);
-                    this.applyLanguage();
-                    AudioFX.playClick();
-                });
-            }
-
+            await this.loadLocale(this.lang);
+            this.setupDropdown();
             this.applyLanguage();
         },
 
+        setupDropdown() {
+            const wrapper = document.getElementById('langDropdownWrapper');
+            const langBtn = document.getElementById('langToggle');
+            const langMenu = document.getElementById('langMenu');
+
+            if (!wrapper || !langBtn || !langMenu) return;
+
+            // Render options from availableLangs list.json
+            langMenu.innerHTML = this.availableLangs.map(l => `
+                <button class="theme-option lang-option ${l.code === this.lang ? 'active' : ''}" data-lang-val="${l.code}">
+                    <i class="fas ${l.icon || 'fa-globe'}"></i>
+                    <span class="theme-name">${l.name}</span>
+                </button>
+            `).join('');
+
+            langBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = langMenu.classList.contains('active');
+                if (typeof window.closeAllDropdowns === 'function') {
+                    window.closeAllDropdowns();
+                }
+                if (!isOpen) {
+                    langMenu.classList.add('active');
+                    wrapper.classList.add('active');
+                }
+                AudioFX.playClick();
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!wrapper.contains(e.target)) {
+                    langMenu.classList.remove('active');
+                    wrapper.classList.remove('active');
+                }
+            });
+
+            langMenu.querySelectorAll('.lang-option').forEach(optBtn => {
+                optBtn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const newLang = optBtn.dataset.langVal;
+                    if (newLang && newLang !== this.lang) {
+                        this.lang = newLang;
+                        localStorage.setItem('user_lang', this.lang);
+                        await this.loadLocale(this.lang);
+                        this.applyLanguage();
+                        AudioFX.playClick();
+                    }
+                    langMenu.classList.remove('active');
+                    wrapper.classList.remove('active');
+                });
+            });
+        },
+
         applyLanguage() {
-            const dict = this.dictionary[this.lang] || this.dictionary.ru;
+            const dict = this.dictionary[this.lang] || this.dictionary.ru || {};
             document.documentElement.lang = this.lang;
 
             const langLabel = document.getElementById('langLabel');
             if (langLabel) {
                 langLabel.textContent = this.lang.toUpperCase();
+            }
+
+            const langMenu = document.getElementById('langMenu');
+            if (langMenu) {
+                langMenu.querySelectorAll('.lang-option').forEach(opt => {
+                    if (opt.dataset.langVal === this.lang) {
+                        opt.classList.add('active');
+                    } else {
+                        opt.classList.remove('active');
+                    }
+                });
             }
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -1379,6 +1442,12 @@
             document.addEventListener('mouseover', (e) => {
                 const target = e.target.closest('[data-tooltip-key], [data-tooltip]');
                 if (target) {
+                    // Don't show tooltip if target belongs to an active open dropdown wrapper or menu
+                    const activeWrapper = target.closest('.theme-dropdown-wrapper.active, .lang-dropdown-wrapper.active, .bgmode-dropdown-wrapper.active');
+                    if (activeWrapper || target.closest('.theme-dropdown-menu, .lang-dropdown-menu, .bgmode-dropdown-menu')) {
+                        this.hide();
+                        return;
+                    }
                     this.show(target);
                 }
             });
@@ -1387,12 +1456,6 @@
                 const target = e.target.closest('[data-tooltip-key], [data-tooltip]');
                 if (target) {
                     this.hide();
-                }
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (this.element && this.element.classList.contains('active')) {
-                    this.position(e.clientX, e.clientY);
                 }
             });
         },
@@ -1410,6 +1473,7 @@
 
             this.element.textContent = text;
             this.element.classList.add('active');
+            this.position(target);
         },
 
         hide() {
@@ -1418,21 +1482,32 @@
             }
         },
 
-        position(x, y) {
+        position(target) {
+            if (!target || !this.element) return;
+
+            const targetRect = target.getBoundingClientRect();
+            const tooltipRect = this.element.getBoundingClientRect();
+
+            // Centered horizontally relative to the target element
+            let posX = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+            // Positioned directly below the element with 10px margin
+            let posY = targetRect.bottom + 10;
+
             const padding = 12;
-            let posX = x + 12;
-            let posY = y + 22;
-
-            const rect = this.element.getBoundingClientRect();
-            if (posX + rect.width > window.innerWidth - padding) {
-                posX = x - rect.width - 12;
-            }
-            if (posY + rect.height > window.innerHeight - padding) {
-                posY = y - rect.height - 12;
+            // Screen boundaries check
+            if (posX < padding) {
+                posX = padding;
+            } else if (posX + tooltipRect.width > window.innerWidth - padding) {
+                posX = window.innerWidth - padding - tooltipRect.width;
             }
 
-            this.element.style.left = `${posX}px`;
-            this.element.style.top = `${posY}px`;
+            if (posY + tooltipRect.height > window.innerHeight - padding) {
+                // If overflows bottom screen edge, place above target
+                posY = targetRect.top - tooltipRect.height - 10;
+            }
+
+            this.element.style.left = `${Math.round(posX)}px`;
+            this.element.style.top = `${Math.round(posY)}px`;
         }
     };
 
@@ -2158,17 +2233,25 @@
         }
     };
 
-    // Initialize modules
-    ThemeEngine.init();
-    I18nEngine.init();
-    AudioFX.init();
-    BGMusic.init();
-    CanvasFX.init();
-    GitHubWidget.init();
-    ModalManager.init();
-    TimeEngine.init();
-    CyberCursor.init();
-    TooltipEngine.init();
-    HackerGameEngine.init();
-    SecurityLock.init();
+    // Initialize modules when DOM is ready
+    function initAllModules() {
+        ThemeEngine.init();
+        I18nEngine.init();
+        AudioFX.init();
+        BGMusic.init();
+        CanvasFX.init();
+        GitHubWidget.init();
+        ModalManager.init();
+        TimeEngine.init();
+        CyberCursor.init();
+        TooltipEngine.init();
+        HackerGameEngine.init();
+        SecurityLock.init();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAllModules);
+    } else {
+        initAllModules();
+    }
 })();

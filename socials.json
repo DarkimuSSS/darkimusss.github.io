@@ -1,0 +1,37 @@
+[
+  {
+    "id": "telegram",
+    "title": "Telegram",
+    "sub": "@DarkimuSSS",
+    "url": "https://t.me/DarkimuSSS",
+    "icon": "fa-brands fa-telegram"
+  },
+  {
+    "id": "github",
+    "title": "GitHub",
+    "sub": "@DarkimuSSS",
+    "url": "https://github.com/DarkimuSSS",
+    "icon": "fa-brands fa-github"
+  },
+  {
+    "id": "discord",
+    "title": "Discord",
+    "sub": "@DarkimuSSS",
+    "url": "https://discord.com/invite/darkimusss",
+    "icon": "fa-brands fa-discord"
+  },
+  {
+    "id": "steam",
+    "title": "Steam",
+    "sub": "@lildarkimusss",
+    "url": "https://steamcommunity.com/id/lildarkimusss/",
+    "icon": "fa-brands fa-steam"
+  },
+  {
+    "id": "wiki",
+    "title": "CubixWorld Wiki",
+    "sub": "Wiki",
+    "url": "https://wiki.dark-core.ru/",
+    "icon": "fa-solid fa-book"
+  }
+]

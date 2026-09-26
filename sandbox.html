@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Cyber Code Sandbox & HTML Preview | darkimusss</title>
+    <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+    <link rel="shortcut icon" type="image/jpeg" href="images/favicon.jpg">
+    <link rel="apple-touch-icon" href="images/favicon.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="sandbox-page">
+    <div class="bg-theme-layer dark-bg"></div>
+    <div class="bg-theme-layer light-bg"></div>
+    <div class="bg-theme-layer emerald-bg"></div>
+    <div class="bg-theme-layer velvet-bg"></div>
+    <canvas id="fxCanvas"></canvas>
+
+    <!-- Верхняя панель управления -->
+    <div class="top-controls-container"></div>
+
+    <div class="bg-grid"></div>
+
+    <!-- Основной контейнер Песочницы -->
+    <div class="sandbox-container">
+        <div class="sandbox-workspace">
+            <!-- Редактор Кода (HTML & CSS) -->
+            <div class="code-editor-box">
+                <div class="editor-tabs">
+                    <button class="collapse-editor-btn" id="collapseEditorBtn" title="Свернуть/Развернуть редактор кода">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button class="tab-btn active" data-tab="html">
+                        <i class="fa-brands fa-html5"></i> <span>HTML</span>
+                    </button>
+                    <button class="tab-btn" data-tab="css">
+                        <i class="fa-brands fa-css3-alt"></i> <span>CSS</span>
+                    </button>
+                    <div class="preset-dropdown-wrapper">
+                        <select id="templateSelect" class="template-select">
+                            <option value="none" data-i18n="sandbox_sample_select">-- Выбрать Готовый Семпл --</option>
+                            <option value="cyber-button">Neon Cyber Button</option>
+                            <option value="glass-card">Glassmorphic Card</option>
+                            <option value="glowing-badge">Glowing Badge</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="editor-area">
+                    <textarea id="htmlInput" class="code-textarea active" placeholder="Вставьте ваш HTML код здесь..." data-i18n-ph="sandbox_ph_html"></textarea>
+                    <textarea id="cssInput" class="code-textarea" placeholder="Вставьте ваш CSS стиль здесь..." data-i18n-ph="sandbox_ph_css"></textarea>
+                </div>
+
+                <div class="editor-bar">
+                    <button class="sandbox-btn primary" id="runCodeBtn">
+                        <i class="fa-solid fa-play"></i> <span data-i18n="sandbox_btn_run">Запустить Предпросмотр</span>
+                    </button>
+                    <button class="sandbox-btn secondary" id="clearCodeBtn">
+                        <i class="fa-solid fa-eraser"></i> <span data-i18n="sandbox_btn_clear">Очистить</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Зона Предпросмотра (Preview Window) -->
+            <div class="preview-box">
+                <div class="preview-header">
+                    <span class="preview-title"><i class="fa-solid fa-desktop"></i> Live Preview</span>
+                    <div class="bg-toggle-chips">
+                        <button class="bg-chip active" data-bg="dark">Dark</button>
+                        <button class="bg-chip" data-bg="light">Light</button>
+                        <button class="bg-chip" data-bg="transparent">Grid</button>
+                    </div>
+                </div>
+                <div class="preview-iframe-wrapper" id="previewWrapper">
+                    <iframe id="previewIframe" sandbox="allow-scripts"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="navpanel.js"></script>
+    <script src="main.js"></script>
+    <script>
+        // Скрипт Sandbox Песочницы
+        document.addEventListener('DOMContentLoaded', () => {
+            const htmlInput = document.getElementById('htmlInput');
+            const cssInput = document.getElementById('cssInput');
+            const previewIframe = document.getElementById('previewIframe');
+            const runBtn = document.getElementById('runCodeBtn');
+            const clearBtn = document.getElementById('clearCodeBtn');
+            const templateSelect = document.getElementById('templateSelect');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const bgChips = document.querySelectorAll('.bg-chip');
+            const previewWrapper = document.getElementById('previewWrapper');
+
+            // Пресеты
+            const TEMPLATES = {
+                'cyber-button': {
+                    html: `<button class="neon-btn">CYBERPUNK</button>`,
+                    css: `body {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  margin: 0;\n  font-family: sans-serif;\n}\n.neon-btn {\n  background: #090e1c;\n  color: #38bdf8;\n  border: 1px solid #38bdf8;\n  padding: 14px 32px;\n  font-size: 1.1rem;\n  font-weight: 800;\n  letter-spacing: 2px;\n  border-radius: 12px;\n  cursor: pointer;\n  box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);\n  transition: all 0.3s ease;\n}\n.neon-btn:hover {\n  background: #38bdf8;\n  color: #040714;\n  box-shadow: 0 0 30px #38bdf8;\n}`
+                },
+                'glass-card': {
+                    html: `<div class="glass-box">\n  <h3>Cyber Glass Card</h3>\n  <p>Интерактивная карта с эффектом размытия стеклянного морфизма.</p>\n</div>`,
+                    css: `body {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  margin: 0;\n  font-family: sans-serif;\n}\n.glass-box {\n  background: rgba(255, 255, 255, 0.1);\n  backdrop-filter: blur(16px);\n  border: 1px solid rgba(255, 255, 255, 0.2);\n  padding: 24px 32px;\n  border-radius: 20px;\n  color: #ffffff;\n  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);\n}`
+                },
+                'glowing-badge': {
+                    html: `<span class="badge active"><span class="dot"></span> ONLINE NODE</span>`,
+                    css: `body {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  margin: 0;\n  font-family: sans-serif;\n}\n.badge {\n  display: inline-flex;\n  align-items: center;\n  gap: 8px;\n  background: rgba(16, 185, 129, 0.15);\n  border: 1px solid #10b981;\n  color: #10b981;\n  padding: 8px 16px;\n  border-radius: 20px;\n  font-weight: 700;\n  font-size: 0.9rem;\n}\n.dot {\n  width: 8px;\n  height: 8px;\n  border-radius: 50%;\n  background: #10b981;\n  box-shadow: 0 0 10px #10b981;\n}`
+                }
+            };
+
+            // Дефолтный код
+            htmlInput.value = TEMPLATES['cyber-button'].html;
+            cssInput.value = TEMPLATES['cyber-button'].css;
+
+            function updatePreview() {
+                const html = htmlInput.value;
+                const css = cssInput.value;
+                
+                previewIframe.srcdoc = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+    <style>
+        ${css}
+    </style>
+</head>
+<body>
+    ${html}
+</body>
+</html>`;
+            }
+
+            // Переключение вкладок HTML / CSS
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const tab = btn.dataset.tab;
+                    if (tab === 'html') {
+                        htmlInput.classList.add('active');
+                        cssInput.classList.remove('active');
+                    } else {
+                        cssInput.classList.add('active');
+                        htmlInput.classList.remove('active');
+                    }
+                });
+            });
+
+            // Семплы
+            templateSelect.addEventListener('change', (e) => {
+                const val = e.target.value;
+                if (TEMPLATES[val]) {
+                    htmlInput.value = TEMPLATES[val].html;
+                    cssInput.value = TEMPLATES[val].css;
+                    updatePreview();
+                }
+            });
+
+            // Фоны Предпросмотра
+            bgChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    bgChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    const bg = chip.dataset.bg;
+                    if (bg === 'light') {
+                        previewWrapper.style.background = '#f8fafc';
+                    } else if (bg === 'transparent') {
+                        previewWrapper.style.background = 'radial-gradient(rgba(56, 189, 248, 0.2) 1px, transparent 1px), #040714';
+                        previewWrapper.style.backgroundSize = '20px 20px';
+                    } else {
+                        previewWrapper.style.background = '#040714';
+                    }
+                });
+            });
+
+            runBtn.addEventListener('click', updatePreview);
+            htmlInput.addEventListener('input', updatePreview);
+            cssInput.addEventListener('input', updatePreview);
+
+            clearBtn.addEventListener('click', () => {
+                htmlInput.value = '';
+                cssInput.value = '';
+                updatePreview();
+            });
+
+            const collapseBtn = document.getElementById('collapseEditorBtn');
+            const sandboxWorkspace = document.querySelector('.sandbox-workspace');
+
+            collapseBtn.addEventListener('click', () => {
+                sandboxWorkspace.classList.toggle('editor-collapsed');
+                const isCollapsed = sandboxWorkspace.classList.contains('editor-collapsed');
+                collapseBtn.innerHTML = isCollapsed ? '<i class="fa-solid fa-chevron-right"></i>' : '<i class="fa-solid fa-chevron-left"></i>';
+            });
+
+            updatePreview();
+        });
+    </script>
+</body>
+
+</html>
